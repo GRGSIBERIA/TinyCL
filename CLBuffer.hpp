@@ -1,7 +1,10 @@
 #ifndef CL_BUFFER_HPP
 #define CL_BUFFER_HPP
 
+#include <vector>
+#include <array>
 #include "CLInformation.hpp"
+#include "CLExecute.hpp"
 
 namespace cl
 {
@@ -53,9 +56,33 @@ namespace cl
 		*/
 		CLBuffer() {}
 
+	public:
 		virtual ~CLBuffer()
 		{
 			clReleaseMemObject(memory);
+		}
+
+		template <typename T>
+		void Write(CLExecute& exec, const std::vector<T>& enqueueData)
+		{
+			clEnqueueWriteBuffer(
+				exec.CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T) * enqueueData.size(), &enqueueData[0], 
+				0, NULL, NULL);
+		}
+
+		template <typename T, int NUM>
+		void Write(CLExecute& exec, const std::array<T, NUM>& enqueueData)
+		{
+			clEnqueueWriteBuffer(
+				exec.CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T) * enqueueData.size(), &enqueueData[0],
+				0, NULL, NULL);
+		}
+
+		void Dequeue()
+		{
+
 		}
 	};
 }
