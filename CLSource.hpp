@@ -4,8 +4,6 @@
 #include <string>
 #include <fstream>
 #include <iostream>
-#include <iterator>
-#include <vector>
 
 namespace cl
 {

@@ -9,6 +9,8 @@
 #include <CL\cl.h>
 #endif
 
+#include "CLException.hpp"
+
 #define CL_MAX_NUM_DEVICES 32
 
 namespace cl
@@ -23,19 +25,81 @@ namespace cl
 		cl_uint numPlatforms;	//!< コンピュータの数
 		cl_int result;			//!< 結果
 
+	private:
+		void GetPlatformIds()
+		{
+			// コンピュータのIDを取得
+			result = clGetPlatformIDs(1, &platformId, &numPlatforms);
+
+			switch (result)
+			{
+			case CL_INVALID_VALUE:
+				throw CLInvalidArgumentException("clGetPlatformIDs", "なぜか引数がおかしい");
+
+			case CL_OUT_OF_HOST_MEMORY:
+				throw CLFailedAllacException("ホスト上でメモリの確保に失敗");
+			}
+		}
+
+		void GetDeviceIds()
+		{
+			// 演算装置のIDを取得
+			result = clGetDeviceIDs(platformId, CL_DEVICE_TYPE_ALL, CL_MAX_NUM_DEVICES, deviceIds, &numDevices);
+
+			switch (result)
+			{
+			case CL_INVALID_DEVICE_TYPE:
+			case CL_INVALID_VALUE:
+				throw CLInvalidArgumentException("clGetDeviceIDs", "num_entriesかplatformsがなんか変");
+
+			case CL_INVALID_PLATFORM:
+				throw CLException("プラットフォームがOpenCLに対応してない");
+
+			case CL_OUT_OF_HOST_MEMORY:
+				throw CLFailedAllacException("ホスト側でリソースの確保に失敗");
+
+			case CL_OUT_OF_RESOURCES:
+				throw CLFailedAllacException("デバイス側でリソースの確保に失敗");
+			}
+		}
+
+		void CreateContext()
+		{
+			// 並列演算管理クラスの生成，デバイスの数だけ生成する
+			context = clCreateContext(NULL, numDevices, deviceIds, NULL, NULL, &result);
+
+			switch (result)
+			{
+			case CL_INVALID_PLATFORM:
+				throw CLInvalidArgumentException("clCreateContext", "有効なプラットフォームじゃない");
+
+			case CL_INVALID_DEVICE:
+				throw CLInvalidArgumentException("clCreateContext", "有効なデバイスじゃない");
+
+			case CL_INVALID_VALUE:
+				throw CLInvalidArgumentException("clCreateContext", "無効な値が渡された");
+
+			case CL_DEVICE_NOT_AVAILABLE:
+				throw CLException("渡されたdevicesに現在利用不可能なものが存在する");
+
+			case CL_OUT_OF_HOST_MEMORY:
+				throw CLFailedAllacException("ホスト側でリソースの確保に失敗");
+
+			case CL_OUT_OF_RESOURCES:
+				throw CLFailedAllacException("デバイス側でリソースの確保に失敗");
+			}
+		}
+
 	public:
 		CLInformation()
 			: 
 			platformId(NULL), context(NULL)
 		{
-			// コンピュータのIDを取得
-			result = clGetPlatformIDs(1, &platformId, &numPlatforms);
+			GetPlatformIds();	// コンピュータのIDを取得
 
-			// 演算装置のIDを取得
-			result = clGetDeviceIDs(platformId, CL_DEVICE_TYPE_DEFAULT, CL_MAX_NUM_DEVICES, deviceIds, &numDevices);
-
-			// 並列演算管理クラスの生成，デバイスの数だけ生成する
-			context = clCreateContext(NULL, numDevices, deviceIds, NULL, NULL, &result);
+			GetDeviceIds();		// 演算装置のIDを取得
+			
+			CreateContext();	// 中央管理的なもの
 		}
 
 		virtual ~CLInformation()
