@@ -1,7 +1,7 @@
 #ifndef CL_INFORMATION_HPP
 #define CL_INFORMATION_HPP
 
-#include <vector>
+#include <array>
 
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
@@ -10,6 +10,7 @@
 #endif
 
 #include "CLException.hpp"
+#include "CLDeviceInformation.hpp"
 
 #define CL_MAX_NUM_DEVICES 32
 
@@ -25,6 +26,8 @@ namespace cl
 		cl_uint numPlatforms;	//!< コンピュータの数
 		cl_int result;			//!< 結果
 
+		std::array<CLDeviceInformation, CL_MAX_NUM_DEVICES> deviceInfos;	//!< デバイスの情報
+
 	private:
 		void GetPlatformIds()
 		{
@@ -34,7 +37,7 @@ namespace cl
 			switch (result)
 			{
 			case CL_INVALID_VALUE:
-				throw CLInvalidArgumentException("clGetPlatformIDs", "なぜか引数がおかしい");
+				throw CLInvalidArgumentException("なぜか引数がおかしい");
 
 			case CL_OUT_OF_HOST_MEMORY:
 				throw CLFailedAllacException("ホスト上でメモリの確保に失敗");
@@ -50,7 +53,7 @@ namespace cl
 			{
 			case CL_INVALID_DEVICE_TYPE:
 			case CL_INVALID_VALUE:
-				throw CLInvalidArgumentException("clGetDeviceIDs", "num_entriesかplatformsがなんか変");
+				throw CLInvalidArgumentException("num_entriesかplatformsがなんか変");
 
 			case CL_INVALID_PLATFORM:
 				throw CLException("プラットフォームがOpenCLに対応してない");
@@ -71,13 +74,13 @@ namespace cl
 			switch (result)
 			{
 			case CL_INVALID_PLATFORM:
-				throw CLInvalidArgumentException("clCreateContext", "有効なプラットフォームじゃない");
+				throw CLInvalidArgumentException("有効なプラットフォームじゃない");
 
 			case CL_INVALID_DEVICE:
-				throw CLInvalidArgumentException("clCreateContext", "有効なデバイスじゃない");
+				throw CLInvalidArgumentException("有効なデバイスじゃない");
 
 			case CL_INVALID_VALUE:
-				throw CLInvalidArgumentException("clCreateContext", "無効な値が渡された");
+				throw CLInvalidArgumentException("無効な値が渡された");
 
 			case CL_DEVICE_NOT_AVAILABLE:
 				throw CLException("渡されたdevicesに現在利用不可能なものが存在する");
@@ -90,6 +93,14 @@ namespace cl
 			}
 		}
 
+		void GetDevicesInformations()
+		{
+			for (int i = 0; i < CL_MAX_NUM_DEVICES; ++i)
+			{
+				deviceInfos[i] = CLDeviceInformation(deviceIds[i]);
+			}
+		}
+
 	public:
 		CLInformation()
 			: 
@@ -98,6 +109,8 @@ namespace cl
 			GetPlatformIds();	// コンピュータのIDを取得
 
 			GetDeviceIds();		// 演算装置のIDを取得
+
+
 			
 			CreateContext();	// 中央管理的なもの
 		}

@@ -16,6 +16,9 @@
     <Filter Include="ヘッダー ファイル\Buffer">
       <UniqueIdentifier>{9c27e302-a57b-458a-99d6-224bc0cc3473}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\Exception">
+      <UniqueIdentifier>{d9cf6e0f-57e7-4a76-8a93-9803993e354b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -30,9 +33,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CLSource.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="OpenCL.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="CLExecuteProperty.hpp">
@@ -62,8 +62,11 @@
     <ClInclude Include="CLUseHostBuffer.hpp">
       <Filter>ヘッダー ファイル\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="CLException.hpp">
+    <ClInclude Include="TinyCL.hpp">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CLException.hpp">
+      <Filter>ヘッダー ファイル\Exception</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

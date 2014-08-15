@@ -25,8 +25,8 @@ namespace cl
 		/**
 		* –³Œø‚Èˆø”‚ª“n‚³‚ê‚½‚Æ‚«‚Ì—áŠO
 		*/
-		CLInvalidArgumentException(const std::string& functionName, const std::string& cause)
-			: CLException(functionName + ":" + cause) {}
+		CLInvalidArgumentException(const std::string& cause)
+			: CLException(cause) {}
 	};
 
 	/**
