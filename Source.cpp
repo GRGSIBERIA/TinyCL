@@ -1,11 +1,7 @@
-#include <CL\cl.h>
 #include <iostream>
-#include <string>
+#include <array>
+
 #include "TinyCL.hpp"
-
-void test(const std::string& hoge) {
-
-}
 
 int main() {
 	auto device = cl::information.GetGPU();
@@ -16,8 +12,13 @@ int main() {
 
 	cl::CLReadWriteBuffer buf(exec, 32);
 
-	std::array<int, 4> arr;
+	std::array<int, 4> arr = {0, 1, 2, 3};
+
 	buf.Write(arr);
+
+	// タスクの実行をここでやる
+
+	buf.Read(arr);
 
 	char a;
 	std::cin >> a;

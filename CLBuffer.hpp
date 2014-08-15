@@ -56,7 +56,7 @@ namespace cl
 
 		void ResultTest(const cl_int result) const
 		{
-			if (result == CL_SUCCESS)
+			if (result != CL_SUCCESS)
 			{
 				throw CLException("Write‚©Read‚ÉŽ¸”s‚µ‚Ü‚µ‚½", result);
 			}
