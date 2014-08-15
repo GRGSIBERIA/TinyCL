@@ -4,6 +4,7 @@
 #include "CLInformation.hpp"
 #include "CLSource.hpp"
 #include "CLExecuteProperty.hpp"
+#include "CLDeviceInformation.hpp"
 
 namespace cl
 {
@@ -17,9 +18,9 @@ namespace cl
 		* カーネルの実行やバッファの転送を管理する
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] source ソースコード
-		* \param[in] 利用したいデバイスID
+		* \param[in] useDeviceId利用したいデバイスID
 		*/
-		CLExecute(CLSource& source, cl_device_id useDeviceId)
+		CLExecute(CLSource& source, const cl_device_id& useDeviceId)
 			: executeProperty(source, useDeviceId)
 		{
 
@@ -29,10 +30,34 @@ namespace cl
 		* カーネルの実行やバッファの転送を管理する
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] sourceArray ソースコードの配列クラス
-		* \param[in] 利用したいデバイスID
+		* \param[in] useDeviceId 利用したいデバイスID
 		*/
-		CLExecute(CLSourceArray& sourceArray, cl_device_id useDeviceId)
+		CLExecute(CLSourceArray& sourceArray, const cl_device_id& useDeviceId)
 			: executeProperty(sourceArray, useDeviceId)
+		{
+
+		}
+
+		/**
+		* カーネルの実行やバッファの転送を管理する
+		* \param[in] info OpenCLの情報クラス
+		* \param[in] source ソースコード
+		* \param[in] useDeviceId利用したいデバイスID
+		*/
+		CLExecute(CLSource& source, const CLDeviceInformation& device)
+			: executeProperty(source, device.DeviceId())
+		{
+
+		}
+
+		/**
+		* カーネルの実行やバッファの転送を管理する
+		* \param[in] info OpenCLの情報クラス
+		* \param[in] sourceArray ソースコードの配列クラス
+		* \param[in] useDeviceId 利用したいデバイスID
+		*/
+		CLExecute(CLSourceArray& sourceArray, const CLDeviceInformation& device)
+			: executeProperty(sourceArray, device.DeviceId())
 		{
 
 		}

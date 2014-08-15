@@ -1,7 +1,8 @@
 #ifndef CL_INFORMATION_HPP
 #define CL_INFORMATION_HPP
 
-#include <array>
+#include <vector>
+#include <algorithm>
 
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>
@@ -12,7 +13,7 @@
 #include "CLException.hpp"
 #include "CLDeviceInformation.hpp"
 
-#define CL_MAX_NUM_DEVICES 32
+#define CL_MAX_NUM_DEVICES 64
 
 namespace cl
 {
@@ -26,7 +27,7 @@ namespace cl
 		cl_uint numPlatforms;	//!< コンピュータの数
 		cl_int result;			//!< 結果
 
-		std::array<CLDeviceInformation, CL_MAX_NUM_DEVICES> deviceInfos;	//!< デバイスの情報
+		std::vector<CLDeviceInformation> deviceInfos;	//!< デバイスの情報
 
 	private:
 		void GetPlatformIds()
@@ -97,20 +98,40 @@ namespace cl
 		{
 			for (int i = 0; i < CL_MAX_NUM_DEVICES; ++i)
 			{
-				deviceInfos[i] = CLDeviceInformation(deviceIds[i]);
+				if (deviceIds[i] != NULL)	// 存在しないデバイスはNULL
+					deviceInfos.emplace_back(deviceIds[i]);
 			}
+		}
+
+	public:
+		const CLDeviceInformation& GetGPU() const
+		{
+			auto result = std::find(deviceInfos.begin(), deviceInfos.end(), 
+				[](const CLDeviceInformation& device) {
+					return device.DeviceType == CL_DEVICE_TYPE_GPU; 
+			});
+			return (*result);
+		}
+
+		const CLDeviceInformation& GetGPU() const
+		{
+			auto result = std::find(deviceInfos.begin(), deviceInfos.end(),
+				[](const CLDeviceInformation& device) {
+				return device.DeviceType == CL_DEVICE_TYPE_CPU;
+			});
+			return (*result);
 		}
 
 	public:
 		CLInformation()
 			: 
-			platformId(NULL), context(NULL)
+			platformId(NULL), context(NULL), deviceInfos()
 		{
 			GetPlatformIds();	// コンピュータのIDを取得
 
 			GetDeviceIds();		// 演算装置のIDを取得
 
-
+			GetDevicesInformations();	// デバイス情報を取得
 			
 			CreateContext();	// 中央管理的なもの
 		}

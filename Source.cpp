@@ -14,7 +14,9 @@ int main() {
 
 	cl::CLReadWriteBuffer buf(32);
 
-	std::cout << source.Code() << std::endl;
+
+	std::cout << CL_DEVICE_TYPE_GPU << std::endl;
+	std::cout << cl::information.deviceInfos.size() << std::endl;
 
 	char a;
 	std::cin >> a;

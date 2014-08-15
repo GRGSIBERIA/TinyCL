@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CLDeviceInformation.hpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
