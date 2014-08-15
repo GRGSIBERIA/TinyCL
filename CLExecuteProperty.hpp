@@ -1,5 +1,5 @@
-#ifndef CLEXECUTEPROPERTY_HPP
-#define CLEXECUTEPROPERTY_HPP
+#ifndef CL_EXECUTE_PROPERTY_HPP
+#define CL_EXECUTE_PROPERTY_HPP
 
 
 #include "CLInformation.hpp"

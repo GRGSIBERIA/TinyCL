@@ -1,7 +1,7 @@
 #include <CL\cl.h>
 #include <iostream>
 #include <string>
-#include "OpenCL.hpp"
+#include "TinyCL.hpp"
 
 void test(const std::string& hoge) {
 

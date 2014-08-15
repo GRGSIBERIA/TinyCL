@@ -1,5 +1,5 @@
-#ifndef CLINFORMATION_HPP
-#define CLINFORMATION_HPP
+#ifndef CL_INFORMATION_HPP
+#define CL_INFORMATION_HPP
 
 #include <vector>
 

@@ -1,5 +1,5 @@
-#ifndef CLBUFFER_HPP
-#define CLBUFFER_HPP
+#ifndef CL_BUFFER_HPP
+#define CL_BUFFER_HPP
 
 #include "CLInformation.hpp"
 

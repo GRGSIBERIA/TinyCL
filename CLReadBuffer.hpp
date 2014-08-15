@@ -1,5 +1,5 @@
-#ifndef CLREADBUFFER_HPP
-#define CLREADBUFFER_HPP
+#ifndef CL_READ_BUFFER_HPP
+#define CL_READ_BUFFER_HPP
 
 #include "CLBuffer.hpp"
 

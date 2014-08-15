@@ -1,5 +1,5 @@
-#ifndef CLSOURCEARRAY_HPP
-#define CLSOURCEARRAY_HPP
+#ifndef CL_SOURCE_ARRAY_HPP
+#define CL_SOURCE_ARRAY_HPP
 
 #include "CLSource.hpp"
 

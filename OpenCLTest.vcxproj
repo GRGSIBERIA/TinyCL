@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="CLAllocHostBuffer.hpp" />
     <ClInclude Include="CLBuffer.hpp" />
+    <ClInclude Include="CLException.hpp" />
     <ClInclude Include="CLExecute.hpp" />
     <ClInclude Include="CLExecuteProperty.hpp" />
     <ClInclude Include="CLHostCopyBuffer.hpp" />

@@ -62,6 +62,9 @@
     <ClInclude Include="CLUseHostBuffer.hpp">
       <Filter>ヘッダー ファイル\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="CLException.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="test.cl">
