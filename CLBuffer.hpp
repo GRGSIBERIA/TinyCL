@@ -14,6 +14,7 @@ namespace cl
 	class CLBuffer
 	{
 	private:
+		CLExecute* exec;
 		cl_mem memory;
 		size_t size;
 
@@ -45,16 +46,17 @@ namespace cl
 		CLBuffer(const CLBuffer& copy) { }
 
 	protected:
-		CLBuffer(const cl_mem_flags flag, const size_t size, void* hostPtr) 
-		{
-			this->size = size;
-			this->memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
-		}
-
 		/**
 		* 生で扱うのは危険なのでデフォルトコンストラクタは禁止
 		*/
-		CLBuffer() {}
+		CLBuffer()
+			: exec(0), size(0) {}
+
+		CLBuffer(CLExecute& exec, const cl_mem_flags flag, const size_t size, void* hostPtr)
+			: exec(&exec), size(size)
+		{
+			this->memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
+		}
 
 	public:
 		virtual ~CLBuffer()
@@ -63,26 +65,39 @@ namespace cl
 		}
 
 		template <typename T>
-		void Write(CLExecute& exec, const std::vector<T>& enqueueData)
+		void Write(const std::vector<T>& enqueueData)
 		{
 			clEnqueueWriteBuffer(
-				exec.CommandQueue(), memory, CL_TRUE,
+				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * enqueueData.size(), &enqueueData[0], 
 				0, NULL, NULL);
 		}
 
 		template <typename T, int NUM>
-		void Write(CLExecute& exec, const std::array<T, NUM>& enqueueData)
+		void Write(const std::array<T, NUM>& enqueueData)
 		{
 			clEnqueueWriteBuffer(
-				exec.CommandQueue(), memory, CL_TRUE,
+				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * enqueueData.size(), &enqueueData[0],
 				0, NULL, NULL);
 		}
 
-		void Dequeue()
+		template <typename T>
+		void Read(std::vector<T>& dequeueData)
 		{
+			clEnqueueReadBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
+				0, NULL, NULL);
+		}
 
+		template <typename T, int NUM>
+		void Read(std::array<T, NUM>& dequeueData)
+		{
+			clEnqueueReadBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
+				0, NULL, NULL);
 		}
 	};
 }

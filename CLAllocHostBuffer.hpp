@@ -32,8 +32,8 @@ namespace cl
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] size ホスト側とデバイス側で確保するメモリ領域の大きさ
 		*/
-		CLAllocHostBuffer(const size_t size)
-			: CLBuffer(CL_MEM_ALLOC_HOST_PTR, size, hostPtr) { }
+		CLAllocHostBuffer(CLExecute& exec, const size_t size)
+			: CLBuffer(exec, CL_MEM_ALLOC_HOST_PTR, size, hostPtr) { }
 
 		virtual ~CLAllocHostBuffer()
 		{

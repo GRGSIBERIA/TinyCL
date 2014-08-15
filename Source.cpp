@@ -14,10 +14,10 @@ int main() {
 
 	cl::CLExecute exec(source, device);
 
-	cl::CLReadWriteBuffer buf(32);
+	cl::CLReadWriteBuffer buf(exec, 32);
 
 	std::array<int, 12> arr;
-	buf.Write(exec, arr);
+	buf.Write(arr);
 
 	char a;
 	std::cin >> a;

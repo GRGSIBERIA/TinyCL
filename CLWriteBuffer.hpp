@@ -19,8 +19,8 @@ namespace cl
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] size デバイス側に確保する領域
 		*/
-		CLWriteBuffer(const size_t size)
-			: CLBuffer(CL_MEM_WRITE_ONLY, size, NULL) { }
+		CLWriteBuffer(CLExecute& exec, const size_t size)
+			: CLBuffer(exec, CL_MEM_WRITE_ONLY, size, NULL) { }
 
 		virtual ~CLWriteBuffer() {}
 	};
