@@ -14,6 +14,19 @@ namespace cl
 		CLExecuteProperty executeProperty;
 
 	public:
+		inline cl_command_queue& CommandQueue() {
+			return executeProperty.commandQueue;
+		}
+
+		inline cl_program& Program() {
+			return executeProperty.program;
+		}
+
+		inline cl_kernel& Kernel() {
+			return executeProperty.kernel;
+		}
+
+	public:
 		/**
 		* カーネルの実行やバッファの転送を管理する
 		* \param[in] info OpenCLの情報クラス

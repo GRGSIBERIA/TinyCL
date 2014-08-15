@@ -20,7 +20,7 @@ namespace cl
 	class CLInformation
 	{
 	public:
-		cl_platform_id platformId;						//!< コンピュータのID
+		cl_platform_id platformId;					//!< コンピュータのID
 		cl_device_id deviceIds[CL_MAX_NUM_DEVICES];	//!< PCに接続された演算装置，4つまで
 		cl_context context;		//!< 並列演算管理クラス
 		cl_uint numDevices;		//!< 演算装置の数
@@ -103,23 +103,25 @@ namespace cl
 			}
 		}
 
+		const CLDeviceInformation& GetType(const cl_device_type& type) const
+		{
+			for (const auto& device : deviceInfos)
+			{
+				if (device.DeviceType() == type)
+					return device;
+			}
+			throw CLException("該当するデバイスが存在しない");
+		}
+		
 	public:
 		const CLDeviceInformation& GetGPU() const
 		{
-			auto result = std::find(deviceInfos.begin(), deviceInfos.end(), 
-				[](const CLDeviceInformation& device) {
-					return device.DeviceType == CL_DEVICE_TYPE_GPU; 
-			});
-			return (*result);
+			return GetType(CL_DEVICE_TYPE_GPU);
 		}
 
-		const CLDeviceInformation& GetGPU() const
+		const CLDeviceInformation& GetCPU() const
 		{
-			auto result = std::find(deviceInfos.begin(), deviceInfos.end(),
-				[](const CLDeviceInformation& device) {
-				return device.DeviceType == CL_DEVICE_TYPE_CPU;
-			});
-			return (*result);
+			return GetType(CL_DEVICE_TYPE_CPU);
 		}
 
 	public:
