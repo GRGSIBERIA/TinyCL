@@ -14,6 +14,9 @@ namespace cl
 	public:
 		CLException(const std::string& cause)
 			: std::exception(cause.c_str()) {}
+
+		CLException(const std::string& cause, const cl_int& errorNo)
+			: std::exception((cause + ":" + std::to_string(errorNo)).c_str()) {}
 	};
 
 	/**

@@ -16,7 +16,7 @@ int main() {
 
 	cl::CLReadWriteBuffer buf(exec, 32);
 
-	std::array<int, 12> arr;
+	std::array<int, 4> arr;
 	buf.Write(arr);
 
 	char a;

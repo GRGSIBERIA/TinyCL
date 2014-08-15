@@ -45,6 +45,23 @@ namespace cl
 		*/
 		CLBuffer(const CLBuffer& copy) { }
 
+		template <typename T>
+		void SizeTest(const size_t& size) const
+		{
+			if (this->size < size * sizeof(T))
+			{
+				throw CLFailedAllacException("バッファのサイズよりホスト側のサイズの方が大きい");
+			}
+		}
+
+		void ResultTest(const cl_int result) const
+		{
+			if (result == CL_SUCCESS)
+			{
+				throw CLException("WriteかReadに失敗しました", result);
+			}
+		}
+
 	protected:
 		/**
 		* 生で扱うのは危険なのでデフォルトコンストラクタは禁止
@@ -64,40 +81,94 @@ namespace cl
 			clReleaseMemObject(memory);
 		}
 
+		/**
+		* ホスト側からデバイス側に転送
+		*/
 		template <typename T>
 		void Write(const std::vector<T>& enqueueData)
 		{
-			clEnqueueWriteBuffer(
+			SizeTest<T>(enqueueData.size());
+
+			auto result = clEnqueueWriteBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * enqueueData.size(), &enqueueData[0], 
 				0, NULL, NULL);
+			ResultTest(result);
 		}
 
+		/**
+		* ホスト側からデバイス側に転送
+		*/
 		template <typename T, int NUM>
 		void Write(const std::array<T, NUM>& enqueueData)
 		{
-			clEnqueueWriteBuffer(
+			SizeTest<T>(enqueueData.size());
+
+			auto result = clEnqueueWriteBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * enqueueData.size(), &enqueueData[0],
 				0, NULL, NULL);
+			ResultTest(result);
 		}
 
+		/**
+		* ホスト側からデバイス側に転送
+		*/
+		template <typename T>
+		void Write(const T& enqueueData, const unsigned dataCount)
+		{
+			SizeTest<T>(dataCount);
+
+			auto result = clEnqueueWriteBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T) * dataCount, &enqueueData,
+				0, NULL, NULL);
+			ResultTest(result);
+		}
+
+		/**
+		* デバイス側からホスト側に転送
+		*/
 		template <typename T>
 		void Read(std::vector<T>& dequeueData)
 		{
-			clEnqueueReadBuffer(
+			SizeTest<T>(dequeueData.size());
+
+			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
+			ResultTest(result);
 		}
 
+		/**
+		* デバイス側からホスト側に転送
+		*/
 		template <typename T, int NUM>
 		void Read(std::array<T, NUM>& dequeueData)
 		{
-			clEnqueueReadBuffer(
+			SizeTest<T>(dequeueData.size());
+
+			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
+			ResultTest(result);
+		}
+
+		/**
+		* デバイス側からホスト側に転送
+		*/
+		template <typename T>
+		void Read(T& dequeueData, const unsigned dataCount)
+		{
+			SizeTest<T>(dataCount);
+
+			auto result = clEnqueueReadBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T) * dataCount, &enqueueData,
+				0, NULL, NULL);
+			ResultTest(result);
 		}
 	};
 }
