@@ -18,6 +18,19 @@ namespace cl
 		cl_kernel kernel;
 
 	private:
+		void TestProgramResult()
+		{
+			if (information.result != CL_SUCCESS)
+			{
+				switch (information.result)
+				{
+				case CL_INVALID_VALUE:
+				case CL_OUT_OF_RESOURCES:
+				case CL_OUT_OF_HOST_MEMORY:
+				}
+			}
+		}
+
 		void LoadSingleProgram(CLSource& source)
 		{
 			size_t sourceSize = source.Size();
@@ -26,14 +39,14 @@ namespace cl
 			switch (source.Type())
 			{
 			case SourceType::Text:
-				clCreateProgramWithSource(
+				program = clCreateProgramWithSource(
 					information.context, 1,
 					(const char**)&sourceCode, (size_t*)&sourceSize,
 					&information.result);
 				break;
 
 			case SourceType::Binary:
-				clCreateProgramWithBinary(
+				program = clCreateProgramWithBinary(
 					information.context, information.numDevices, information.deviceIds,
 					(size_t*)sourceSize, (const unsigned char**)&sourceCode,
 					NULL, &information.result);
@@ -49,14 +62,14 @@ namespace cl
 			switch (sourceArray.Type())
 			{
 			case SourceType::Text:
-				clCreateProgramWithSource(
+				program = clCreateProgramWithSource(
 					information.context, 1,
 					sourceArray.Pointers(), sourceArray.Sizes(),
 					&information.result);
 				break;
 
 			case SourceType::Binary:
-				clCreateProgramWithBinary(
+				program = clCreateProgramWithBinary(
 					information.context, information.numDevices, information.deviceIds,
 					sourceArray.Sizes(), (const unsigned char**)sourceArray.Pointers(),
 					NULL, &information.result);
@@ -75,6 +88,7 @@ namespace cl
 
 			// プログラムの読み込み
 			LoadSingleProgram(source);
+			TestProgramResult();
 
 			// プログラムのビルド
 			kernel = clCreateKernel(program, source.KernelName().c_str(), &information.result);
@@ -87,6 +101,7 @@ namespace cl
 
 			// プログラムの読み込み
 			LoadMultiProgram(sourceArray);
+			TestProgramResult();
 
 			// プログラムのビルド
 			kernel = clCreateKernel(program, sourceArray.KernelName().c_str(), &information.result);

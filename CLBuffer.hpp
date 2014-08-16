@@ -67,12 +67,12 @@ namespace cl
 		* 生で扱うのは危険なのでデフォルトコンストラクタは禁止
 		*/
 		CLBuffer()
-			: exec(0), size(0) {}
+			: exec(NULL), size(0) {}
 
 		CLBuffer(CLExecute& exec, const cl_mem_flags flag, const size_t size, void* hostPtr)
 			: exec(&exec), size(size)
 		{
-			this->memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
+			memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
 		}
 
 	public:
@@ -99,7 +99,7 @@ namespace cl
 		/**
 		* ホスト側からデバイス側に転送
 		*/
-		template <typename T, int NUM>
+		template <typename T, size_t NUM>
 		void Write(const std::array<T, NUM>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
@@ -144,7 +144,7 @@ namespace cl
 		/**
 		* デバイス側からホスト側に転送
 		*/
-		template <typename T, int NUM>
+		template <typename T, size_t NUM>
 		void Read(std::array<T, NUM>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
