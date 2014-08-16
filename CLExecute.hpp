@@ -23,18 +23,21 @@ namespace cl
 				switch (result)
 				{
 				case CL_INVALID_KERNEL:
-					throw CLException("有効なカーネルじゃない");
+					throw CLException("無効なカーネルが指定されています");
 				case CL_INVALID_ARG_INDEX:
-					throw CLException("arg_indexで指定した引数のインデックスが適切じゃない");
+					throw CLException("引数のインデックスが不正です");
 				case CL_INVALID_ARG_VALUE:
-					throw CLException("");
+					throw CLException("引数の値が不正です");
 				case CL_INVALID_MEM_OBJECT:
+					throw CLException("メモリオブジェクトが不正です");
 				case CL_INVALID_SAMPLER:
+					throw CLException("サンプラーオブジェクトが不正です");
 				case CL_INVALID_ARG_SIZE:
+					throw CLException("引数で指定したサイズが不正です");
 				case CL_OUT_OF_RESOURCES:
+					throw CLException("デバイス側のリソースを確保できませんでした");
 				case CL_OUT_OF_HOST_MEMORY:
-				default:
-					throw CLException("何かエラーが起きて引数をセットできませんでした", result);
+					throw CLException("ホスト側のリソースを確保できませんでした");
 				}
 			}
 		}

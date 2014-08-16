@@ -1,9 +1,11 @@
 #ifndef CL_EXECUTE_PROPERTY_HPP
 #define CL_EXECUTE_PROPERTY_HPP
 
+#include <vector>
 
 #include "CLInformation.hpp"
 #include "CLSource.hpp"
+#include "ExceptionTest.hpp"
 
 namespace cl
 {
@@ -24,9 +26,42 @@ namespace cl
 			{
 				switch (information.result)
 				{
+				case CL_INVALID_CONTEXT:
+					throw CLException("コンテクストが無効です");
 				case CL_INVALID_VALUE:
+					throw CLException("無効な値が指定されました");
+				case CL_INVALID_DEVICE:
+					throw CLException("デバイスが無効です");
+				case CL_INVALID_BINARY:
+					throw CLException("プログラムのバイナリが無効です");
 				case CL_OUT_OF_RESOURCES:
+					throw CLException("デバイス側のリソースを確保できませんでした");
 				case CL_OUT_OF_HOST_MEMORY:
+					throw CLException("ホスト側のリソースを確保できませんでした");
+				}
+			}
+		}
+
+		void TestKernelResult()
+		{
+			if (information.result != CL_SUCCESS)
+			{
+				switch (information.result)
+				{
+				case CL_INVALID_PROGRAM:
+					throw CLException("プログラムオブジェクトが無効です");
+				case CL_INVALID_PROGRAM_EXECUTABLE:
+					throw CLException("正常にビルドされた実行可能プログラムがありません");
+				case CL_INVALID_KERNEL_NAME:
+					throw CLException("指定されたカーネル名がプログラム内に見つかりません");
+				case CL_INVALID_KERNEL_DEFINITION:
+					throw CLException("カーネルの関数定義に対して，プログラムオブジェクトがビルドされたすべてのデバイスで同じではありません");
+				case CL_INVALID_VALUE:
+					throw CLException("無効な値が指定されました");
+				case CL_OUT_OF_RESOURCES:
+					throw CLException("デバイス側でリソースの確保に失敗しました");
+				case CL_OUT_OF_HOST_MEMORY:
+					throw CLException("ホスト側でリソースの確保に失敗しました");
 				}
 			}
 		}
@@ -92,6 +127,7 @@ namespace cl
 
 			// プログラムのビルド
 			kernel = clCreateKernel(program, source.KernelName().c_str(), &information.result);
+			TestKernelResult();
 		}
 
 		CLExecuteProperty(CLSourceArray& sourceArray, cl_device_id useDeviceId)
@@ -105,6 +141,7 @@ namespace cl
 
 			// プログラムのビルド
 			kernel = clCreateKernel(program, sourceArray.KernelName().c_str(), &information.result);
+			TestKernelResult();
 		}
 
 		virtual ~CLExecuteProperty()
