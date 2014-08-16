@@ -5,7 +5,7 @@
 #include <fstream>
 #include <iostream>
 
-namespace cl
+namespace tcl
 {
 	/**
 	* ソースコードの種類
@@ -90,10 +90,21 @@ namespace cl
 		* \param[in] kernelName カーネル名
 		* \param[in] type ソースコードの種類
 		*/
-		CLSource(const std::string& filename, const std::string& kernelName, const SourceType type = SourceType::Text)
+		CLSource(const std::string& filename, const std::string& kernelName, const SourceType type)
 			: fileName(filename), kernelName(kernelName), type(type)
 		{
 			OpenFile();
+		}
+
+		/**
+		* ソースコードを管理するためのクラス
+		* \param[in] code ソースコードの文字列
+		* \param[in] kernelName カーネル名
+		*/
+		CLSource(const std::string& code, const std::string& kernelName)
+			: kernelName(kernelName), type(SourceType::Text), code(code), fileName("")
+		{
+
 		}
 	};
 }

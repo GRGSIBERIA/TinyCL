@@ -4,7 +4,7 @@
 #include <string>
 #include <exception>
 
-namespace cl
+namespace tcl
 {
 	/**
 	* TinyCLの基本的な例外クラス

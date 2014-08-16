@@ -3,7 +3,7 @@
 
 #include "CLBuffer.hpp"
 
-namespace cl
+namespace tcl
 {
 	/**
 	* ホスト側のメモリ領域を，デバイス側にコピーしたバッファ

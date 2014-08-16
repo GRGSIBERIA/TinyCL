@@ -5,9 +5,8 @@
 
 #include "CLInformation.hpp"
 #include "CLSource.hpp"
-#include "ExceptionTest.hpp"
 
-namespace cl
+namespace tcl
 {
 	/**
 	* ソースコードの実行を扱うためのクラス
@@ -22,7 +21,7 @@ namespace cl
 	private:
 		void TestProgramResult()
 		{
-			if (information.result != CL_SUCCESS)
+			if (information.result != CL_SUCCESS || program == NULL)
 			{
 				switch (information.result)
 				{
@@ -38,13 +37,15 @@ namespace cl
 					throw CLException("デバイス側のリソースを確保できませんでした");
 				case CL_OUT_OF_HOST_MEMORY:
 					throw CLException("ホスト側のリソースを確保できませんでした");
+				default:
+					throw CLException("プログラムオブジェクトがNULLになっています");
 				}
 			}
 		}
 
 		void TestKernelResult()
 		{
-			if (information.result != CL_SUCCESS)
+			if (information.result != CL_SUCCESS || kernel == NULL)
 			{
 				switch (information.result)
 				{
@@ -62,6 +63,8 @@ namespace cl
 					throw CLException("デバイス側でリソースの確保に失敗しました");
 				case CL_OUT_OF_HOST_MEMORY:
 					throw CLException("ホスト側でリソースの確保に失敗しました");
+				default:
+					throw CLException("プログラムオブジェクトがNULLになっています");
 				}
 			}
 		}

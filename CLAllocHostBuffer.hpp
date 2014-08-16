@@ -3,7 +3,7 @@
 
 #include "CLBuffer.hpp"
 
-namespace cl
+namespace tcl
 {
 	/**
 	* ホスト側にメモリ領域を確保して，それを利用するバッファ

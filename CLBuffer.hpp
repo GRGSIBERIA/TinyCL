@@ -6,7 +6,7 @@
 #include "CLInformation.hpp"
 #include "CLExecute.hpp"
 
-namespace cl
+namespace tcl
 {
 	/**
 	* デバイス側メモリ領域のラッパークラス

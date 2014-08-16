@@ -156,7 +156,6 @@
     <ClInclude Include="CLSource.hpp" />
     <ClInclude Include="CLUseHostBuffer.hpp" />
     <ClInclude Include="CLWriteBuffer.hpp" />
-    <ClInclude Include="ExceptionTest.hpp" />
     <ClInclude Include="TinyCL.hpp" />
     <ClInclude Include="CLSourceArray.hpp" />
   </ItemGroup>

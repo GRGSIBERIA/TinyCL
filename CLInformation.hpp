@@ -15,7 +15,7 @@
 
 #define CL_MAX_NUM_DEVICES 64
 
-namespace cl
+namespace tcl
 {
 	class CLInformation
 	{

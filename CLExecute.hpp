@@ -6,7 +6,7 @@
 #include "CLExecuteProperty.hpp"
 #include "CLDeviceInformation.hpp"
 
-namespace cl
+namespace tcl
 {
 	class CLExecute
 	{
@@ -46,6 +46,20 @@ namespace cl
 		{
 			if (result != CL_SUCCESS)
 				throw CLException("何かエラーが起きてタスクを実行できませんでした", result);
+		}
+
+		void RunTask()
+		{
+			// タスクの実行
+			const auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, NULL);
+			TestEnqueueTask(resultTask);
+		}
+
+		template <typename T>
+		void SetArg(T& buffer)
+		{
+			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
+			TestKernelArg(resultArg);
 		}
 
 	public:
@@ -115,15 +129,11 @@ namespace cl
 		* \param[in] buffer ソースコード側で利用するためのバッファ
 		*/
 		template <typename T>
-		void SendTask(T& buffer)
+		void Run(T& buffer)
 		{
-			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
-			TestKernelArg(resultArg);
+			SetArg(buffer);
 			argCount = 0;
-
-			// タスクの実行
-			const auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, NULL);
-			TestEnqueueTask(resultTask);
+			RunTask();
 		}
 
 		/**
@@ -132,11 +142,16 @@ namespace cl
 		* \param[in] otherBuffers 可変長引数
 		*/
 		template <typename T, typename... Args>
-		void SendTask(T& buffer, Args&... otherBuffers)
+		void Run(T& buffer, Args&... otherBuffers)
 		{
-			auto result = clSetKernelArg(Kernel(), argCount++, sizeof(T), &buffer);
-			TestKernelArg(result);
-			SendTask(otherBuffers...);
+			SetArg(buffer);
+			argCount++;
+			Run(otherBuffers...);
+		}
+
+		void Run()
+		{
+			RunTask();
 		}
 	};
 }

@@ -3,7 +3,7 @@
 
 #include "CLBuffer.hpp"
 
-namespace cl
+namespace tcl
 {
 	/**
 	* デバイス側で読み込みのみできるバッファ

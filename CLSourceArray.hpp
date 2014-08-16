@@ -4,7 +4,7 @@
 #include <vector>
 #include "CLSource.hpp"
 
-namespace cl
+namespace tcl
 {
 	/**
 	* 複数ソースコードを使いたい場合の配列

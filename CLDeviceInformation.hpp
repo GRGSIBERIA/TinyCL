@@ -9,7 +9,7 @@
 
 #include "CLException.hpp"
 
-namespace cl
+namespace tcl
 {
 	class CLDeviceInformation
 	{
