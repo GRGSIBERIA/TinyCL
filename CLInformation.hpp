@@ -1,5 +1,5 @@
-#ifndef CL_INFORMATION_HPP
-#define CL_INFORMATION_HPP
+#ifndef TCL_INFORMATION_HPP
+#define TCL_INFORMATION_HPP
 
 #include <vector>
 #include <algorithm>
@@ -13,7 +13,7 @@
 #include "CLException.hpp"
 #include "CLDeviceInformation.hpp"
 
-#define CL_MAX_NUM_DEVICES 64
+#define TCL_MAX_NUM_DEVICES 64
 
 namespace tcl
 {
@@ -21,7 +21,7 @@ namespace tcl
 	{
 	public:
 		cl_platform_id platformId;					//!< コンピュータのID
-		cl_device_id deviceIds[CL_MAX_NUM_DEVICES];	//!< PCに接続された演算装置，4つまで
+		cl_device_id deviceIds[TCL_MAX_NUM_DEVICES];	//!< PCに接続された演算装置，4つまで
 		cl_context context;		//!< 並列演算管理クラス
 		cl_uint numDevices;		//!< 演算装置の数
 		cl_uint numPlatforms;	//!< コンピュータの数
@@ -48,7 +48,7 @@ namespace tcl
 		void GetDeviceIds()
 		{
 			// 演算装置のIDを取得
-			result = clGetDeviceIDs(platformId, CL_DEVICE_TYPE_ALL, CL_MAX_NUM_DEVICES, deviceIds, &numDevices);
+			result = clGetDeviceIDs(platformId, CL_DEVICE_TYPE_ALL, TCL_MAX_NUM_DEVICES, deviceIds, &numDevices);
 
 			switch (result)
 			{
@@ -96,7 +96,7 @@ namespace tcl
 
 		void GetDevicesInformations()
 		{
-			for (int i = 0; i < CL_MAX_NUM_DEVICES; ++i)
+			for (int i = 0; i < TCL_MAX_NUM_DEVICES; ++i)
 			{
 				if (deviceIds[i] != NULL)	// 存在しないデバイスはNULL
 					deviceInfos.emplace_back(deviceIds[i]);

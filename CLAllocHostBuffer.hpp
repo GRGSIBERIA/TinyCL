@@ -1,5 +1,5 @@
-#ifndef CL_ALLOC_HOST_BUFFER_HPP
-#define CL_ALLOC_HOST_BUFFER_HPP
+#ifndef TCL_ALLOC_HOST_BUFFER_HPP
+#define TCL_ALLOC_HOST_BUFFER_HPP
 
 #include "CLBuffer.hpp"
 

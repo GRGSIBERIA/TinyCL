@@ -1,5 +1,5 @@
-#ifndef CL_DEVICE_HPP
-#define CL_DEVICE_HPP
+#ifndef TCL_DEVICE_HPP
+#define TCL_DEVICE_HPP
 
 #ifdef __APPLE__
 #include <OpenCL/opencl.h>

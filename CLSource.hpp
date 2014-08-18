@@ -1,5 +1,5 @@
-#ifndef CL_SOURCE_HPP
-#define CL_SOURCE_HPP
+#ifndef TCL_SOURCE_HPP
+#define TCL_SOURCE_HPP
 
 #include <string>
 #include <fstream>

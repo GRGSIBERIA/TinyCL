@@ -1,5 +1,5 @@
-#ifndef CL_EXCEPTION_HPP
-#define CL_EXCEPTION_HPP
+#ifndef TCL_EXCEPTION_HPP
+#define TCL_EXCEPTION_HPP
 
 #include <string>
 #include <exception>

@@ -1,5 +1,5 @@
-#ifndef CL_BUFFER_HPP
-#define CL_BUFFER_HPP
+#ifndef TCL_BUFFER_HPP
+#define TCL_BUFFER_HPP
 
 #include <vector>
 #include <array>

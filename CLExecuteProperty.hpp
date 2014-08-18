@@ -1,5 +1,5 @@
-#ifndef CL_EXECUTE_PROPERTY_HPP
-#define CL_EXECUTE_PROPERTY_HPP
+#ifndef TCL_EXECUTE_PROPERTY_HPP
+#define TCL_EXECUTE_PROPERTY_HPP
 
 #include <vector>
 

@@ -1,5 +1,5 @@
-#ifndef CL_SOURCE_ARRAY_HPP
-#define CL_SOURCE_ARRAY_HPP
+#ifndef TCL_SOURCE_ARRAY_HPP
+#define TCL_SOURCE_ARRAY_HPP
 
 #include <vector>
 #include "CLSource.hpp"

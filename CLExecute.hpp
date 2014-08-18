@@ -1,5 +1,5 @@
-#ifndef CL_EXECUTE_HPP
-#define CL_EXECUTE_HPP
+#ifndef TCL_EXECUTE_HPP
+#define TCL_EXECUTE_HPP
 
 #include "CLInformation.hpp"
 #include "CLSource.hpp"
@@ -46,13 +46,6 @@ namespace tcl
 		{
 			if (result != CL_SUCCESS)
 				throw CLException("何かエラーが起きてタスクを実行できませんでした", result);
-		}
-
-		template <typename T>
-		void SetArg(T& buffer)
-		{
-			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
-			TestKernelArg(resultArg);
 		}
 
 		
@@ -126,8 +119,21 @@ namespace tcl
 		template <typename T>
 		void SetArg(T& buffer)
 		{
-			SetArg(buffer);
+			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
+			TestKernelArg(resultArg);
 			argCount = 0;
+		}
+
+		/**
+		* カーネルに渡すための引数を差し替えor設定する
+		* \param argIndex 引数のインデックス
+		* \param buffer カーネルで利用したいバッファ
+		*/
+		template <typename T>
+		void SetArg(const cl_uint argIndex, T& buffer)
+		{
+			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(T), &buffer);
+			TestKernelArg(resultArg);
 		}
 
 		/**
@@ -141,18 +147,6 @@ namespace tcl
 			SetArg(buffer);
 			argCount++;
 			SetArg(otherBuffers...);
-		}
-
-		/**
-		* カーネルに渡すための引数を差し替えor設定する
-		* \param argIndex 引数のインデックス
-		* \param buffer カーネルで利用したいバッファ
-		*/
-		template <typename T>
-		void SetArg(const cl_uint argIndex, T& buffer)
-		{
-			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(T), &buffer);
-			TestKernelArg(resultArg);
 		}
 
 		/**

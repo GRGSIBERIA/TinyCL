@@ -1,6 +1,12 @@
 #include <iostream>
 #include "TinyCL.hpp"
 
+
+void test(const size_t* arg)
+{
+
+}
+
 int main() {
 	auto device = tcl::information.GetGPU();
 

@@ -19,6 +19,9 @@
     <Filter Include="ヘッダー ファイル\Exception">
       <UniqueIdentifier>{d9cf6e0f-57e7-4a76-8a93-9803993e354b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ヘッダー ファイル\WorkGroup">
+      <UniqueIdentifier>{adf3c5ab-7f5d-440d-96ed-c74c8f57dd62}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -70,6 +73,9 @@
     </ClInclude>
     <ClInclude Include="CLException.hpp">
       <Filter>ヘッダー ファイル\Exception</Filter>
+    </ClInclude>
+    <ClInclude Include="WorkGroupSettings.hpp">
+      <Filter>ヘッダー ファイル\WorkGroup</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

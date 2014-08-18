@@ -158,6 +158,7 @@
     <ClInclude Include="CLWriteBuffer.hpp" />
     <ClInclude Include="TinyCL.hpp" />
     <ClInclude Include="CLSourceArray.hpp" />
+    <ClInclude Include="WorkGroupSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.cl" />

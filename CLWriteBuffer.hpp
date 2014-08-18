@@ -1,5 +1,5 @@
-#ifndef CL_WRITE_BUFFER_HPP
-#define CL_WRITE_BUFFER_HPP
+#ifndef TCL_WRITE_BUFFER_HPP
+#define TCL_WRITE_BUFFER_HPP
 
 #include "CLBuffer.hpp"
 
