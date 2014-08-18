@@ -52,30 +52,51 @@ namespace tcl
 		}
 
 	public:
+		/**
+		* デバイスIDを返す
+		*/
 		inline const cl_device_id& DeviceId() const {
 			return deviceId;
 		}
 
+		/**
+		* デバイスの種類を返す
+		*/
 		inline const cl_device_type& DeviceType() const {
 			return deviceType;
 		}
 
+		/**
+		* 使用可能なコア数を返す
+		*/
 		inline const cl_uint& MaxComputeUnits() const {
 			return maxComputeUnits;
 		}
 
+		/**
+		* 使用可能なワークアイテムの次元数を返す
+		*/
 		inline const cl_uint& MaxWorkItemDimensions() const {
 			return maxWorkItemDimensions;
 		}
 
+		/**
+		* ワークグループの最大数を返す
+		*/
 		inline const size_t& MaxWorkGroupSize() const {
 			return maxWorkGroupSize;
 		}
 
+		/**
+		* コアの最大周波数を返す
+		*/
 		inline const cl_uint& MaxClockFrequency() const {
 			return maxClockFrequency;
 		}
 
+		/**
+		* メモリの確保可能な領域をバイト数で返す
+		*/
 		inline const cl_ulong& MaxMemoryAllocSize() const {
 			return maxMemoryAllocSize;
 		}
