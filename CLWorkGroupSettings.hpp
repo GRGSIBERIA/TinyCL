@@ -9,6 +9,8 @@
 
 #include <vector>
 
+#include "CLDeviceInformation.hpp"
+
 namespace tcl
 {
 	/**
@@ -22,6 +24,25 @@ namespace tcl
 		std::vector<size_t> globalWorker;
 		std::vector<size_t> globalOffset;
 		std::vector<size_t> localWorker;
+
+	private:
+		inline void OptimizeDimension(const CLDeviceInformation& device)
+		{
+			// 次元数を丸める
+			if (device.MaxWorkItemDimensions() < workDimension)
+				workDimension = device.MaxWorkItemDimensions();
+		}
+
+		inline void OptimizeVectors(const CLDeviceInformation& device, std::vector<size_t> target)
+		{
+			const auto itemSizes = device.MaxWorkItemSizes();
+			for (size_t i = 0; i < device.MaxWorkItemDimensions(); ++i)
+			{
+				if (itemSizes[i] < target[i])
+					target[i] = itemSizes[i];
+			}
+		}
+
 
 	public:
 		inline cl_uint Dimension() const
@@ -44,19 +65,28 @@ namespace tcl
 			return &localWorker[0];
 		}
 
+		CLWorkGroupSettings& Optimize(const CLDeviceInformation& device)
+		{
+			OptimizeDimension(device);
+			OptimizeVectors(device, globalWorker);
+			OptimizeVectors(device, globalOffset);
+			OptimizeVectors(device, localWorker);
+			return *this;
+		}
+
 	public:
 		/**
 		* CLExecute::Runでワークグループの数を設定するためのクラス
-		* \param[in] dimension ワークアイテムの次数
-		* \param[in] workerSize 次数に応じたワークグループの全体の大きさ
-		* \param[in] offset 次数に応じた実行位置
-		* \param[in] splitSize ワークグループ1つあたりの大きさ
+		* \param[in] dimension ワークアイテムの次元数
+		* \param[in] workerSize ワークアイテムの大きさ，次元数ごとのアイテムの数
+		* \param[in] offset 次元数に応じた実行位置
+		* \param[in] splitSize ワークアイテム全体の区切り方
 		*/
 		CLWorkGroupSettings(const cl_uint dimension, const std::vector<size_t>& workerSize, const std::vector<size_t>& offset, const std::vector<size_t>& splitSize)
-			: 
-			workDimension(dimension), 
-			globalWorker(workerSize), 
-			globalOffset(offset), 
+			:
+			workDimension(dimension),
+			globalWorker(workerSize),
+			globalOffset(offset),
 			localWorker(splitSize)
 		{
 			if (workerSize.size() != dimension || splitSize.size() != dimension || offset.size() != dimension)

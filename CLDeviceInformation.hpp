@@ -7,6 +7,8 @@
 #include <CL\cl.h>
 #endif
 
+#include <vector>
+
 #include "CLException.hpp"
 
 namespace tcl
@@ -23,6 +25,7 @@ namespace tcl
 
 		cl_uint maxClockFrequency;
 		cl_ulong maxMemoryAllocSize;
+		std::vector<size_t> maxWorkItemSizes;
 
 		cl_bool imageSupport;
 		cl_uint maxReadImageArgs;
@@ -88,10 +91,17 @@ namespace tcl
 		}
 
 		/**
-		* コアの最大周波数を返す
+		* デバイスの最大設計クロック周波数をMHzで返す
 		*/
 		inline const cl_uint& MaxClockFrequency() const {
 			return maxClockFrequency;
+		}
+
+		/**
+		* 次元ごとの最大アイテム数を返す
+		*/
+		inline const std::vector<size_t>& MaxWorkItemSizes() const {
+			return maxWorkItemSizes;
 		}
 
 		/**
@@ -188,6 +198,10 @@ namespace tcl
 			GetDeviceInfo<cl_ulong>(globalMemorySize, CL_DEVICE_GLOBAL_MEM_SIZE);
 			GetDeviceInfo<cl_ulong>(maxConstantBufferSize, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE);
 			GetDeviceInfo<cl_ulong>(maxConstantArgs, CL_DEVICE_MAX_CONSTANT_ARGS);
+
+			size_t* wis = NULL;
+			auto result = clGetDeviceInfo(deviceId, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof(size_t) * maxWorkItemDimensions, wis, NULL);
+			maxWorkItemSizes = std::vector<size_t>(wis, wis + maxWorkItemDimensions);
 		}
 	};
 }
