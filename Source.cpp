@@ -15,8 +15,6 @@ int main() {
 
 	exec.Run();
 
-	test({ 1, 2, 3 });
-
 	char a;
 	std::cin >> a;
 }

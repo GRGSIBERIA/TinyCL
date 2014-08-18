@@ -155,13 +155,10 @@
     <ClInclude Include="CLReadWriteBuffer.hpp" />
     <ClInclude Include="CLSource.hpp" />
     <ClInclude Include="CLUseHostBuffer.hpp" />
-    <ClInclude Include="CLWorkGroup2DSettings.hpp" />
-    <ClInclude Include="CLWorkGroup3DSettings.hpp" />
+    <ClInclude Include="CLWorkGroupSettings.hpp" />
     <ClInclude Include="CLWriteBuffer.hpp" />
     <ClInclude Include="TinyCL.hpp" />
     <ClInclude Include="CLSourceArray.hpp" />
-    <ClInclude Include="CLWorkGroupSettings.hpp" />
-    <ClInclude Include="CLWorkGroup1DSettings.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="test.cl" />

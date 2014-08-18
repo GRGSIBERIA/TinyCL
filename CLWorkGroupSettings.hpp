@@ -47,19 +47,21 @@ namespace tcl
 	public:
 		/**
 		* CLExecute::Runでワークグループの数を設定するためのクラス
-		* \tparam WORK_DIM ワークグループの次元数
+		* \param[in] dimension ワークアイテムの次数
+		* \param[in] workerSize 次数に応じたワークグループの全体の大きさ
+		* \param[in] offset 次数に応じた実行位置
+		* \param[in] splitSize ワークグループ1つあたりの大きさ
 		*/
-		CLWorkGroupSettings(const cl_uint dimension, const std::vector<size_t>& workerSize, const std::vector<size_t>& splitSize, const std::vector<size_t>& offset)
+		CLWorkGroupSettings(const cl_uint dimension, const std::vector<size_t>& workerSize, const std::vector<size_t>& offset, const std::vector<size_t>& splitSize)
 			: 
 			workDimension(dimension), 
-			globalWorker(workerSize.begin(), workerSize.end()), 
-			globalOffset(offset.begin(), offset.end()), 
-			localWorker(splitSize.begin(), splitSize.end())
+			globalWorker(workerSize), 
+			globalOffset(offset), 
+			localWorker(splitSize)
 		{
-			if (workerSize.size() > dimension || splitSize.size() > dimension || offset.size() > dimension)
-				throw CLException("与えられた引数の数が多すぎます");
+			if (workerSize.size() != dimension || splitSize.size() != dimension || offset.size() != dimension)
+				throw CLException("与えられた次数に対して，与えられた引数の長さが大きすぎるか小さすぎます");
 		}
-
 	};
 }
 

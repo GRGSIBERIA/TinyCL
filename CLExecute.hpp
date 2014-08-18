@@ -49,6 +49,46 @@ namespace tcl
 				throw CLException("何かエラーが起きてタスクを実行できませんでした", result);
 		}
 
+		void TestNDRange(const cl_int& result) const
+		{
+			if (result != CL_SUCCESS)
+			{
+				switch (result)
+				{
+				case CL_INVALID_PROGRAM_EXECUTABLE:
+					throw CLException("コマンドキューに関連付けられた正常にビルドされたプログラムが存在しません");
+				case CL_INVALID_COMMAND_QUEUE:
+					throw CLException("コマンドキューが無効です");
+				case CL_INVALID_KERNEL:
+					throw CLException("カーネルが無効です");
+				case CL_INVALID_CONTEXT:
+					throw CLException("コンテキストが無効です");
+				case CL_INVALID_KERNEL_ARGS:
+					throw CLException("カーネル引数が指定されていません");
+				case CL_INVALID_WORK_DIMENSION:
+					throw CLException("カーネルの分割数が適切ではありません");
+				case CL_INVALID_GLOBAL_OFFSET:
+					throw CLException("オフセットの値がワークサイズを超えています");
+				case CL_INVALID_WORK_GROUP_SIZE:
+					throw CLException("ワークグループの大きさが不正です");
+				case CL_INVALID_WORK_ITEM_SIZE:
+					throw CLException("ワークアイテム数が不正です");
+				case CL_MISALIGNED_SUB_BUFFER_OFFSET:
+					throw CLException("サブバッファオフセットのアラインメントが不正です");
+				case CL_INVALID_IMAGE_SIZE:
+					throw CLException("カーネルに指定したイメージオブジェクトがデバイスでサポートされていません");
+				case CL_OUT_OF_RESOURCES:
+					throw CLException("カーネルの実行に必要なリソースが不足しています");
+				case CL_MEM_OBJECT_ALLOCATION_FAILURE:
+					throw CLException("メモリオブジェクトの領域を確保するのに失敗しました");
+				case CL_INVALID_EVENT_WAIT_LIST:
+					throw CLException("イベント待ちリストが不正です");
+				case CL_OUT_OF_HOST_MEMORY:
+					throw CLException("ホスト側のメモリのリソース確保に失敗しました");
+				}
+			}
+		}
+
 		
 
 	public:
@@ -166,6 +206,7 @@ namespace tcl
 				CommandQueue(), Kernel(), setting.Dimension(), 
 				setting.WorkerSize(), setting.Offset(), setting.SplitSize(), 
 				0, NULL, NULL);
+			TestNDRange(result);
 		}
 	};
 }
