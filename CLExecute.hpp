@@ -5,6 +5,7 @@
 #include "CLSource.hpp"
 #include "CLExecuteProperty.hpp"
 #include "CLDeviceInformation.hpp"
+#include "CLWorkGroupSettings.hpp"
 
 namespace tcl
 {
@@ -159,12 +160,13 @@ namespace tcl
 			TestEnqueueTask(resultTask);
 		}
 
-		/*
-		WorkGroupSettingクラスを作成する
-		WorkGroup1DSetting, 2DSetting, 3DSettingクラスを派生させる
-		WorkGroup関連クラスでは，分割数等の設定だけではなく，調整やエラーチェック等もやってくれる
-		最終的にRunにその設定を渡してあげる
-		*/
+		void Run(CLWorkGroupSettings& setting)
+		{
+			auto result = clEnqueueNDRangeKernel(
+				CommandQueue(), Kernel(), setting.Dimension(), 
+				setting.WorkerSize(), setting.Offset(), setting.SplitSize(), 
+				0, NULL, NULL);
+		}
 	};
 }
 

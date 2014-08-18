@@ -1,8 +1,7 @@
 #include <iostream>
 #include "TinyCL.hpp"
 
-
-void test(const size_t* arg)
+void test(const std::vector<size_t>& test)
 {
 
 }
@@ -15,6 +14,8 @@ int main() {
 	tcl::CLExecute exec(source, device);
 
 	exec.Run();
+
+	test({ 1, 2, 3 });
 
 	char a;
 	std::cin >> a;

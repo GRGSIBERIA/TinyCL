@@ -19,8 +19,8 @@
     <Filter Include="ヘッダー ファイル\Exception">
       <UniqueIdentifier>{d9cf6e0f-57e7-4a76-8a93-9803993e354b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\WorkGroup">
-      <UniqueIdentifier>{adf3c5ab-7f5d-440d-96ed-c74c8f57dd62}</UniqueIdentifier>
+    <Filter Include="ヘッダー ファイル\Settings">
+      <UniqueIdentifier>{020cc782-5a33-47b7-a189-a0ff3e21831a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -74,8 +74,17 @@
     <ClInclude Include="CLException.hpp">
       <Filter>ヘッダー ファイル\Exception</Filter>
     </ClInclude>
-    <ClInclude Include="WorkGroupSettings.hpp">
-      <Filter>ヘッダー ファイル\WorkGroup</Filter>
+    <ClInclude Include="CLWorkGroupSettings.hpp">
+      <Filter>ヘッダー ファイル\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="CLWorkGroup1DSettings.hpp">
+      <Filter>ヘッダー ファイル\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="CLWorkGroup2DSettings.hpp">
+      <Filter>ヘッダー ファイル\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="CLWorkGroup3DSettings.hpp">
+      <Filter>ヘッダー ファイル\Settings</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
