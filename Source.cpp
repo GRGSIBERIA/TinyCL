@@ -1,11 +1,6 @@
 #include <iostream>
 #include "TinyCL.hpp"
 
-void test(const std::vector<size_t>& test)
-{
-
-}
-
 int main() {
 	auto device = tcl::information.GetGPU();
 
@@ -13,7 +8,9 @@ int main() {
 
 	tcl::CLExecute exec(source, device);
 
-	exec.Run();
+	//auto settings = tcl::CLWorkGroupSettings(1, { 5 }, { 0 }, { 5 }).Optimize(device);
+
+	//exec.Run(settings);
 
 	char a;
 	std::cin >> a;

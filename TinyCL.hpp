@@ -3,13 +3,10 @@
 
 #include "CLInformation.hpp"
 
-#include "CLSource.hpp"
 #include "CLSourceArray.hpp"
 
-#include "CLExecuteProperty.hpp"
 #include "CLExecute.hpp"
 
-#include "CLBuffer.hpp"
 #include "CLAllocHostBuffer.hpp"
 #include "CLHostCopyBuffer.hpp"
 #include "CLReadBuffer.hpp"
