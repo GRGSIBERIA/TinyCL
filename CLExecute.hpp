@@ -48,19 +48,14 @@ namespace tcl
 				throw CLException("何かエラーが起きてタスクを実行できませんでした", result);
 		}
 
-		void RunTask()
-		{
-			// タスクの実行
-			const auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, NULL);
-			TestEnqueueTask(resultTask);
-		}
-
 		template <typename T>
 		void SetArg(T& buffer)
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
 			TestKernelArg(resultArg);
 		}
+
+		
 
 	public:
 		inline cl_command_queue& CommandQueue() {
@@ -125,34 +120,57 @@ namespace tcl
 		}
 
 		/**
-		* デバイス側にソースの実行を促す
-		* \param[in] buffer ソースコード側で利用するためのバッファ
+		* カーネルに渡すための引数を設定する
+		* \param[in] buffer カーネルで利用するためのバッファ
 		*/
 		template <typename T>
-		void Run(T& buffer)
+		void SetArg(T& buffer)
 		{
 			SetArg(buffer);
 			argCount = 0;
-			RunTask();
 		}
 
 		/**
-		* デバイス側にソースの実行を促す
-		* \param[in] buffer ソースコード側で利用するためのバッファ
+		* カーネルに渡すための引数を設定する
+		* \param[in] buffer カーネルで利用するためのバッファ
 		* \param[in] otherBuffers 可変長引数
 		*/
 		template <typename T, typename... Args>
-		void Run(T& buffer, Args&... otherBuffers)
+		void SetArg(T& buffer, Args&... otherBuffers)
 		{
 			SetArg(buffer);
 			argCount++;
-			Run(otherBuffers...);
+			SetArg(otherBuffers...);
 		}
 
+		/**
+		* カーネルに渡すための引数を差し替えor設定する
+		* \param argIndex 引数のインデックス
+		* \param buffer カーネルで利用したいバッファ
+		*/
+		template <typename T>
+		void SetArg(const cl_uint argIndex, T& buffer)
+		{
+			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(T), &buffer);
+			TestKernelArg(resultArg);
+		}
+
+		/**
+		* 単一のカーネルを実行させる
+		*/
 		void Run()
 		{
-			RunTask();
+			// タスクの実行
+			const auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, NULL);
+			TestEnqueueTask(resultTask);
 		}
+
+		/*
+		WorkGroupSettingクラスを作成する
+		WorkGroup1DSetting, 2DSetting, 3DSettingクラスを派生させる
+		WorkGroup関連クラスでは，分割数等の設定だけではなく，調整やエラーチェック等もやってくれる
+		最終的にRunにその設定を渡してあげる
+		*/
 	};
 }
 

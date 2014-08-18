@@ -1,7 +1,4 @@
-
 #include <iostream>
-#include <array>
-
 #include "TinyCL.hpp"
 
 int main() {
@@ -10,6 +7,8 @@ int main() {
 	tcl::CLSource source("__kernel void test(void) { }", "test");
 
 	tcl::CLExecute exec(source, device);
+
+	exec.Run();
 
 	char a;
 	std::cin >> a;

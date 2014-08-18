@@ -69,6 +69,36 @@ namespace tcl
 			}
 		}
 
+		void TestBuild(const cl_int& result) const
+		{
+			if (result != CL_SUCCESS)
+			{
+				switch (result)
+				{
+				case CL_INVALID_PROGRAM:
+					throw CLException("無効なプログラムオブジェクトです");
+				case CL_INVALID_VALUE:
+					throw CLException("無効な値です");
+				case CL_INVALID_DEVICE:
+					throw CLException("デバイスオブジェクトがプログラムオブジェクトに関連付けられていません");
+				case CL_INVALID_BINARY:
+					throw CLException("バイナリコードを実行できるデバイスがありません");
+				case CL_INVALID_BUILD_OPTIONS:
+					throw CLException("無効なビルドオプションが指定されました");
+				case CL_INVALID_OPERATION:
+					throw CLException("これ以前にビルドされた実行可能プログラムのビルドが完了していません");
+				case CL_COMPILER_NOT_AVAILABLE:
+					throw CLException("コンパイラが利用できません");
+				case CL_BUILD_PROGRAM_FAILURE:
+					throw CLException("実行可能プログラムのビルドに失敗しました");
+				case CL_OUT_OF_RESOURCES:
+					throw CLException("デバイス側のリソースの確保に失敗しました");
+				case CL_OUT_OF_HOST_MEMORY:
+					throw CLException("ホスト側のリソースの確保に失敗しました");
+				}
+			}
+		}
+
 		void LoadSingleProgram(CLSource& source)
 		{
 			size_t sourceSize = source.Size();
@@ -118,6 +148,12 @@ namespace tcl
 			}
 		}
 
+		void BuildProgram()
+		{
+			const auto result = clBuildProgram(program, information.numDevices, &information.deviceIds[0], NULL, NULL, NULL);
+			TestBuild(result);
+		}
+
 	public:
 		CLExecuteProperty(CLSource& source, cl_device_id useDeviceId)
 		{
@@ -129,6 +165,9 @@ namespace tcl
 			TestProgramResult();
 
 			// プログラムのビルド
+			BuildProgram();
+
+			// カーネルの作成
 			kernel = clCreateKernel(program, source.KernelName().c_str(), &information.result);
 			TestKernelResult();
 		}
@@ -143,6 +182,9 @@ namespace tcl
 			TestProgramResult();
 
 			// プログラムのビルド
+			BuildProgram();
+
+			// カーネルの作成
 			kernel = clCreateKernel(program, sourceArray.KernelName().c_str(), &information.result);
 			TestKernelResult();
 		}
