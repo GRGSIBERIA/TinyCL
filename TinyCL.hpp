@@ -1,10 +1,14 @@
 #ifndef TINY_CL_HPP
 #define TINY_CL_HPP
 
+#include "CLDeviceInformation.hpp"
 #include "CLInformation.hpp"
 
+#include "CLSource.hpp"
 #include "CLSourceArray.hpp"
 
+#include "CLWorkGroupSettings.hpp"
+#include "CLExecuteProperty.hpp"
 #include "CLExecute.hpp"
 
 #include "CLAllocHostBuffer.hpp"

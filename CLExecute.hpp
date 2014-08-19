@@ -2,7 +2,7 @@
 #define TCL_EXECUTE_HPP
 
 #include "CLInformation.hpp"
-#include "CLSource.hpp"
+#include "CLSourceArray.hpp"
 #include "CLExecuteProperty.hpp"
 #include "CLDeviceInformation.hpp"
 #include "CLWorkGroupSettings.hpp"
@@ -200,6 +200,10 @@ namespace tcl
 			TestEnqueueTask(resultTask);
 		}
 
+		/**
+		* 範囲指定してカーネルを実行する
+		* \param[in] setting 実行範囲を指定するクラスのインスタンス
+		*/
 		void Run(CLWorkGroupSettings& setting)
 		{
 			auto result = clEnqueueNDRangeKernel(

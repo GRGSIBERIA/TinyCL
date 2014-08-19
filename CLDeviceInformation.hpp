@@ -199,9 +199,9 @@ namespace tcl
 			GetDeviceInfo<cl_ulong>(maxConstantBufferSize, CL_DEVICE_MAX_CONSTANT_BUFFER_SIZE);
 			GetDeviceInfo<cl_ulong>(maxConstantArgs, CL_DEVICE_MAX_CONSTANT_ARGS);
 
-			size_t* wis = NULL;
-			auto result = clGetDeviceInfo(deviceId, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof(size_t) * maxWorkItemDimensions, wis, NULL);
-			maxWorkItemSizes = std::vector<size_t>(wis, wis + maxWorkItemDimensions);
+			maxWorkItemSizes = std::vector<size_t>(maxWorkItemDimensions);
+			auto result = clGetDeviceInfo(deviceId, CL_DEVICE_MAX_WORK_ITEM_SIZES, sizeof(size_t) * maxWorkItemDimensions, &maxWorkItemSizes[0], NULL);
+			
 		}
 	};
 }

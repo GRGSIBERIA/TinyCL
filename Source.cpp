@@ -4,14 +4,20 @@
 int main() {
 	auto device = tcl::information.GetGPU();
 
-	tcl::CLSource source("__kernel void test(void) { }", "test");
+	tcl::CLSource source("test.cl", "test", tcl::SourceType::Text);
 
 	tcl::CLExecute exec(source, device);
 
-	//auto settings = tcl::CLWorkGroupSettings(1, { 5 }, { 0 }, { 5 }).Optimize(device);
+	const size_t N = 32;
 
-	//exec.Run(settings);
+	tcl::CLReadWriteBuffer x(exec, N);
+	tcl::CLReadWriteBuffer r(exec, N);
 
+	auto settings = tcl::CLWorkGroupSettings(1, { N }, { 0 }, { 1 }).Optimize(device);
+
+	exec.SetArg(x, r);
+	exec.Run(settings);
+	
 	char a;
 	std::cin >> a;
 }
