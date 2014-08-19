@@ -14,19 +14,19 @@ int main() {
 		input[i] = i;
 
 	tcl::CLReadWriteBuffer x(exec, sizeof(float) * N);
-	tcl::CLReadWriteBuffer r(exec, sizeof(float) * N);
+	tcl::CLReadWriteBuffer result(exec, sizeof(float) * N);
 
 	x.Write(input);
 
-	auto settings = tcl::CLWorkGroupSettings(1, { N }, { 0 }, { 1 }).Optimize(device);
+	auto settings = tcl::CLWorkGroupSettings(1, { N }, { 0 }, { N }).Optimize(device);
 
-	exec.SetArg(x(), r());
+	exec.SetArg(x(), result());
 	exec.Run(settings);
 	
-	r.Read(output);
+	result.Read(output);
 
 	for (int i = 0; i < N; ++i)
-		std::cout << i << std::endl;
+		std::cout << output[i] << std::endl;
 
 	char a;
 	std::cin >> a;
