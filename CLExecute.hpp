@@ -162,7 +162,6 @@ namespace tcl
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
 			TestKernelArg(resultArg);
-			argCount = 0;
 		}
 
 		/**
@@ -189,28 +188,40 @@ namespace tcl
 			SetArg(buffer);
 			argCount++;
 			SetArg(otherBuffers...);
+			argCount = 0;
 		}
 
 		/**
 		* 単一のカーネルを実行させる
+		* \param[in] wait 実行終了まで待つかどうか
 		*/
-		void Run()
+		void Run(const bool wait = true)
 		{
-			// タスクの実行
-			const auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, NULL);
+			cl_event event;
+			auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, &event);
+
+			if (wait)
+				clWaitForEvents(1, &event);
+
 			TestEnqueueTask(resultTask);
 		}
 
 		/**
 		* 範囲指定してカーネルを実行する
 		* \param[in] setting 実行範囲を指定するクラスのインスタンス
+		* \param[in] wait 実行終了まで待つかどうか
 		*/
-		void Run(CLWorkGroupSettings& setting)
+		void Run(CLWorkGroupSettings& setting, const bool wait = true)
 		{
+			cl_event event;
 			auto result = clEnqueueNDRangeKernel(
 				CommandQueue(), Kernel(), setting.Dimension(), 
 				setting.WorkerSize(), setting.Offset(), setting.SplitSize(), 
-				0, NULL, NULL);
+				0, NULL, &event);
+
+			if (wait)
+				clWaitForEvents(1, &event);
+
 			TestNDRange(result);
 		}
 	};

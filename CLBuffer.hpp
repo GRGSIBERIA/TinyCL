@@ -54,7 +54,8 @@ namespace tcl
 		template <typename T>
 		void SizeTest(const size_t& size) const
 		{
-			if (this->size < size * sizeof(T))
+			auto argSize = size * sizeof(T);
+			if (this->size < argSize)
 			{
 				throw CLFailedAllacException("バッファのサイズよりホスト側のサイズの方が大きい");
 			}
@@ -65,6 +66,36 @@ namespace tcl
 			if (result != CL_SUCCESS)
 			{
 				throw CLException("WriteかReadに失敗しました", result);
+			}
+		}
+
+		void ReadTest(const cl_uint result) const
+		{
+			if (result != CL_SUCCESS)
+			{
+				switch (result)
+				{
+				case CL_INVALID_COMMAND_QUEUE:
+					throw CLException("コマンドキューが無効です");
+				case CL_INVALID_CONTEXT:
+					throw CLException("コンテクストが無効です");
+				case CL_INVALID_MEM_OBJECT:
+					throw CLException("バッファオブジェクトが無効です");
+				case CL_INVALID_VALUE:
+					throw CLException("指定した読み込み領域が範囲外です");
+				case CL_INVALID_EVENT_WAIT_LIST:
+					throw CLException("イベント待ちリストが無効です");
+				case CL_MISALIGNED_SUB_BUFFER_OFFSET:
+					throw CLException("サブバッファのオフセットがアラインメントされていません");
+				case CL_EXEC_STATUS_ERROR_FOR_EVENTS_IN_WAIT_LIST:
+					throw CLException("読み込みコマンドがブロッキングがどうの");
+				case CL_MEM_OBJECT_ALLOCATION_FAILURE:
+					throw CLException("バッファと関連付けられたデータ保存領域へのメモリ確保に失敗した");
+				case CL_OUT_OF_RESOURCES:
+					throw CLException("デバイス側のリソースの確保に失敗した");
+				case CL_OUT_OF_HOST_MEMORY:
+					throw CLException("ホスト側のリソースの確保に失敗した");
+				}
 			}
 		}
 
@@ -118,21 +149,6 @@ namespace tcl
 		}
 
 		/**
-		* ホスト側からデバイス側に転送
-		*/
-		template <typename T>
-		void Write(const T& enqueueData, const unsigned dataCount)
-		{
-			SizeTest<T>(dataCount);
-
-			auto result = clEnqueueWriteBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * dataCount, &enqueueData,
-				0, NULL, NULL);
-			ResultTest(result);
-		}
-
-		/**
 		* デバイス側からホスト側に転送
 		*/
 		template <typename T>
@@ -158,21 +174,6 @@ namespace tcl
 			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
-				0, NULL, NULL);
-			ResultTest(result);
-		}
-
-		/**
-		* デバイス側からホスト側に転送
-		*/
-		template <typename T>
-		void Read(T& dequeueData, const unsigned dataCount)
-		{
-			SizeTest<T>(dataCount);
-
-			auto result = clEnqueueReadBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * dataCount, &enqueueData,
 				0, NULL, NULL);
 			ResultTest(result);
 		}
