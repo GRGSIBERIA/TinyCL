@@ -170,10 +170,11 @@ namespace tcl
 		void Read(std::array<T, NUM>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
+			auto size = sizeof(T) * dequeueData.size();
 
 			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
+				0, sizeof(T) * dequeueData.size(), dequeueData._Elems,
 				0, NULL, NULL);
 			ResultTest(result);
 		}

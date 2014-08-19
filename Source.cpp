@@ -13,7 +13,7 @@ int main() {
 	for (int i = 0; i < N; ++i)
 	{
 		input[i] = i;
-		output[i] = 0;
+		output[i] = 10;
 	}
 
 	tcl::CLReadWriteBuffer x(exec, sizeof(float) * N);
@@ -21,9 +21,9 @@ int main() {
 
 	x.Write(input);
 
-	auto settings = tcl::CLWorkGroupSettings(1, { N }, { 0 }, { 1 }).Optimize(device);
+	auto settings = tcl::CLWorkGroupSettings(1, { N }, { 0 }, { N }).Optimize(device);
 
-	exec.SetArg(x(), result());
+	exec.SetArg(result());
 	exec.Run(settings);
 	
 	result.Read(output);
