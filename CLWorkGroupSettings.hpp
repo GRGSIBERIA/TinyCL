@@ -33,10 +33,13 @@ namespace tcl
 				workDimension = device.MaxWorkItemDimensions();
 		}
 
-		inline void OptimizeVectors(const CLDeviceInformation& device, std::vector<size_t> target)
+		inline void OptimizeVectors(const CLDeviceInformation& device, std::vector<size_t>& target)
 		{
-			const auto itemSizes = device.MaxWorkItemSizes();
-			for (size_t i = 0; i < device.MaxWorkItemDimensions(); ++i)
+			const auto& itemSizes = device.MaxWorkItemSizes();
+			size_t dimension = device.MaxWorkItemDimensions();
+			if (target.size() < dimension)
+				dimension = target.size();
+			for (size_t i = 0; i < dimension; ++i)
 			{
 				if (itemSizes[i] < target[i])
 					target[i] = itemSizes[i];

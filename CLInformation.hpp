@@ -135,7 +135,7 @@ namespace tcl
 
 			GetDevicesInformations();	// デバイス情報を取得
 			
-			//CreateContext();	// 中央管理的なもの
+			CreateContext();	// 中央管理的なもの
 		}
 
 		virtual ~CLInformation()
