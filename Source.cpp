@@ -22,15 +22,9 @@ int main()
 	x.Write(input);
 
 	auto settings = tcl::CLWorkGroupSettings(1, { 0 }, { N }, { N }).Optimize(device);
+	
 	exec.SetArg(x());
-	clSetKernelArg(exec.Kernel(), 0, sizeof(cl_mem), &x());
 	exec.Run(settings);
-
-	//clSetKernelArg(exec.Kernel(), 0, sizeof(cl_mem), &x.Memory());
-	//size_t of[3] = { 0 };
-	//size_t gw[3] = { N };
-	//size_t lw[3] = { N };
-	//clEnqueueNDRangeKernel(exec.CommandQueue(), exec.Kernel(), 1, of, gw, lw, 0, NULL, NULL);
 
 	x.Read(output);
 
