@@ -216,7 +216,7 @@ namespace tcl
 			cl_event event;
 			auto result = clEnqueueNDRangeKernel(
 				CommandQueue(), Kernel(), setting.Dimension(), 
-				setting.WorkerSize(), setting.Offset(), setting.SplitSize(), 
+				setting.Offset(), setting.WorkerSize(), setting.SplitSize(),
 				0, NULL, &event);
 
 			if (wait)

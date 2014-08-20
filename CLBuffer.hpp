@@ -174,7 +174,7 @@ namespace tcl
 
 			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * dequeueData.size(), dequeueData._Elems,
+				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
 			ResultTest(result);
 		}

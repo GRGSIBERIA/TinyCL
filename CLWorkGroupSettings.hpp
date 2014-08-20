@@ -85,7 +85,7 @@ namespace tcl
 		* \param[in] offset 次元数に応じた実行位置
 		* \param[in] splitSize ワークアイテム全体の区切り方
 		*/
-		CLWorkGroupSettings(const cl_uint dimension, const std::vector<size_t>& workerSize, const std::vector<size_t>& offset, const std::vector<size_t>& splitSize)
+		CLWorkGroupSettings(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerSize, const std::vector<size_t>& splitSize)
 			:
 			workDimension(dimension),
 			globalWorker(workerSize),
