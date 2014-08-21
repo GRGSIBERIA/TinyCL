@@ -6,7 +6,7 @@
 namespace tcl
 {
 	/**
-	* ホスト側のメモリ領域を，デバイス側にコピーしたバッファ
+	* ホスト側のメモリ領域を，デバイス側にコピーするバッファ（非推奨）
 	*/
 	class CLHostCopyBuffer : public CLBuffer
 	{
@@ -15,7 +15,7 @@ namespace tcl
 
 	public:
 		/**
-		* ホスト側のメモリ領域を，デバイス側にコピーしたバッファ
+		* ホスト側のメモリ領域を，デバイス側にコピーするバッファ（非推奨）
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] size ホスト側のメモリ領域の大きさ
 		* \param[in] hostPtr ホスト側で確保されたメモリ領域

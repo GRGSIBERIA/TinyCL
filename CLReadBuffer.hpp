@@ -23,6 +23,30 @@ namespace tcl
 			: CLBuffer(exec, CL_MEM_READ_ONLY, size, NULL) { }
 
 		virtual ~CLReadBuffer() {}
+
+		/**
+		* デバイス側で読み込みのみできるバッファ
+		* \param[in] info OpenCLの情報クラス
+		* \param[in] data バッファに書き込みたい配列
+		*/
+		template <typename T>
+		CLReadBuffer(CLExecute& exec, std::vector<T>& data)
+			: CLBuffer(exec, CL_MEM_READ_ONLY, data.size() * sizeof(T), NULL)
+		{
+			Write(data);
+		}
+
+		/**
+		* デバイス側で読み込みのみできるバッファ
+		* \param[in] info OpenCLの情報クラス
+		* \param[in] data バッファに書き込みたい配列
+		*/
+		template <typename T, size_t NUM>
+		CLReadBuffer(CLExecute& exec, std::array<T, NUM>& data)
+			: CLBuffer(exec, CL_MEM_READ_ONLY, data.size() * sizeof(T), NULL)
+		{
+			Write(data);
+		}
 	};
 }
 

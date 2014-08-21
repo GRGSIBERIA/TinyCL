@@ -6,7 +6,7 @@
 namespace tcl
 {
 	/**
-	* ホスト側にメモリ領域を確保して，それを利用するバッファ
+	* ホスト側にメモリ領域を確保して，それを利用するバッファ（非推奨）
 	*/
 	class CLAllocHostBuffer : public CLBuffer
 	{
@@ -27,8 +27,8 @@ namespace tcl
 
 	public:
 		/**
-		* ホスト側にメモリ領域を確保して，それを利用するバッファ
-		* 危険すぎるので非推奨
+		* ホスト側にメモリ領域を確保して，それを利用するバッファ（非推奨）
+		* \attention 危険すぎるので非推奨
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] size ホスト側とデバイス側で確保するメモリ領域の大きさ
 		*/

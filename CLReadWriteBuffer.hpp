@@ -22,6 +22,30 @@ namespace tcl
 		CLReadWriteBuffer(CLExecute& exec, const size_t size)
 			: CLBuffer(exec, CL_MEM_READ_WRITE, size, NULL) { }
 
+		/**
+		* デバイス側で読み書きのできるバッファ
+		* \param[in] info OpenCLの情報クラス
+		* \param[in] data バッファに書き込みたい配列
+		*/
+		template <typename T>
+		CLReadWriteBuffer(CLExecute& exec, std::vector<T>& data)
+			: CLBuffer(exec, CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
+		{
+			Write(data);
+		}
+
+		/**
+		* デバイス側で読み書きのできるバッファ
+		* \param[in] info OpenCLの情報クラス
+		* \param[in] data バッファに書き込みたい配列
+		*/
+		template <typename T, size_t NUM>
+		CLReadWriteBuffer(CLExecute& exec, std::array<T, NUM>& data)
+			: CLBuffer(exec, CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
+		{
+			Write(data);
+		}
+
 		virtual ~CLReadWriteBuffer() {}
 	};
 }

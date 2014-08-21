@@ -23,6 +23,7 @@ namespace tcl
 			: CLBuffer(exec, CL_MEM_WRITE_ONLY, size, NULL) { }
 
 		virtual ~CLWriteBuffer() {}
+
 	};
 }
 

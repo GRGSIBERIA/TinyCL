@@ -21,11 +21,8 @@ int main()
 	}
 
 	// デバイス側のメモリを確保
-	tcl::CLReadWriteBuffer x(exec, sizeof(float) * N);
-
-	// デバイスに配列を渡す
-	x.Write(input);
-
+	tcl::CLReadWriteBuffer x(exec, input);
+	
 	// 並列実行したいカーネル（GPUクラスタ）の数を設定する
 	// 1次元配列で，0からスタートし，N個の長さを持っていて，それをN個ごとに区切る
 	auto settings = tcl::CLWorkGroupSettings(1, { 0 }, { N }, { N }).Optimize(device);
