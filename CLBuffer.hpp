@@ -17,7 +17,6 @@ namespace tcl
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
-	template <typename ChildClass>
 	class CLBuffer
 	{
 	private:
@@ -207,6 +206,8 @@ namespace tcl
 				0, NULL, NULL);
 			ReadTest(result);
 		}
+
+		
 	};
 }
 
