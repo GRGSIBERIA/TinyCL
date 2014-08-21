@@ -122,7 +122,7 @@ namespace tcl
 		* ホスト側からデバイス側に転送
 		*/
 		template <typename T>
-		void Write(const std::vector<T>& enqueueData)
+		CLBuffer& Write(const std::vector<T>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
 
@@ -131,13 +131,15 @@ namespace tcl
 				0, sizeof(T) * enqueueData.size(), &enqueueData[0], 
 				0, NULL, NULL);
 			ResultTest(result);
+
+			return *this;
 		}
 
 		/**
 		* ホスト側からデバイス側に転送
 		*/
 		template <typename T, size_t NUM>
-		void Write(const std::array<T, NUM>& enqueueData)
+		CLBuffer& Write(const std::array<T, NUM>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
 
@@ -146,6 +148,8 @@ namespace tcl
 				0, sizeof(T) * enqueueData.size(), &enqueueData[0],
 				0, NULL, NULL);
 			ResultTest(result);
+
+			return *this;
 		}
 
 		/**
@@ -153,20 +157,22 @@ namespace tcl
 		* \attention 配列投げると落ちます
 		*/
 		template <typename T>
-		void Write(const T& data)
+		CLBuffer& Write(const T& data)
 		{
 			auto result = clEnqueueWriteBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T), &data,
 				0, NULL, NULL);
 			ResultTest(result);
+
+			return *this;
 		}
 
 		/**
 		* デバイス側からホスト側に転送
 		*/
 		template <typename T>
-		void Read(std::vector<T>& dequeueData)
+		CLBuffer& Read(std::vector<T>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
 
@@ -175,13 +181,15 @@ namespace tcl
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
 			ReadTest(result);
+
+			return *this;
 		}
 
 		/**
 		* デバイス側からホスト側に転送
 		*/
 		template <typename T, size_t NUM>
-		void Read(std::array<T, NUM>& dequeueData)
+		CLBuffer& Read(std::array<T, NUM>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
 			auto size = sizeof(T) * dequeueData.size();
@@ -191,6 +199,8 @@ namespace tcl
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
 			ReadTest(result);
+
+			return *this;
 		}
 
 		/**
@@ -198,13 +208,15 @@ namespace tcl
 		* \attention 配列投げると落ちます
 		*/
 		template <typename T>
-		void Read(T& data)
+		CLBuffer& Read(T& data)
 		{
 			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T), &data,
 				0, NULL, NULL);
 			ReadTest(result);
+
+			return *this;
 		}
 
 		
