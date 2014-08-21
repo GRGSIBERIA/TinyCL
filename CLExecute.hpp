@@ -174,7 +174,6 @@ namespace tcl
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(T), &buffer);
 			TestKernelArg(resultArg);
-			argCount = 0;
 		}
 
 		/**

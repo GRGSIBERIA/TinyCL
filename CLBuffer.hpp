@@ -150,6 +150,7 @@ namespace tcl
 
 		/**
 		* ホスト側からデバイス側に転送
+		* \attention 配列投げると落ちます
 		*/
 		template <typename T>
 		void Write(const T& data)
@@ -194,6 +195,7 @@ namespace tcl
 
 		/**
 		* デバイス側からホスト側に転送
+		* \attention 配列投げると落ちます
 		*/
 		template <typename T>
 		void Read(T& data)
