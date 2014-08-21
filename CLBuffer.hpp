@@ -149,6 +149,19 @@ namespace tcl
 		}
 
 		/**
+		* ホスト側からデバイス側に転送
+		*/
+		template <typename T>
+		void Write(const T& data)
+		{
+			auto result = clEnqueueWriteBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T), &data,
+				0, NULL, NULL);
+			ResultTest(result);
+		}
+
+		/**
 		* デバイス側からホスト側に転送
 		*/
 		template <typename T>
@@ -160,7 +173,7 @@ namespace tcl
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
-			ResultTest(result);
+			ReadTest(result);
 		}
 
 		/**
@@ -176,7 +189,20 @@ namespace tcl
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
 				0, NULL, NULL);
-			ResultTest(result);
+			ReadTest(result);
+		}
+
+		/**
+		* デバイス側からホスト側に転送
+		*/
+		template <typename T>
+		void Read(T& data)
+		{
+			auto result = clEnqueueReadBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, sizeof(T), &data,
+				0, NULL, NULL);
+			ReadTest(result);
 		}
 	};
 }
