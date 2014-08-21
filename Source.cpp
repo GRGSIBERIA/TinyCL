@@ -40,6 +40,8 @@ int main()
 	for (int i = 0; i < N; ++i)
 		std::cout << i << "," << input[i] << std::endl;
 
+	// TODO: ‘¬“x‚ðŽæ‚Á‚Ä‚Ý‚½‚¢
+
 	char a;
 	std::cin >> a;
 }
