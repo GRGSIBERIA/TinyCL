@@ -8,7 +8,7 @@ namespace tcl
 	/**
 	* デバイス側で読み書きのできるバッファ
 	*/
-	class CLReadWriteBuffer : public CLBuffer
+	class CLReadWriteBuffer : public CLBuffer<CLReadWriteBuffer>
 	{
 	private:
 		CLReadWriteBuffer(const CLReadWriteBuffer& buf) { }

@@ -17,6 +17,7 @@ namespace tcl
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
+	template <typename ChildClass>
 	class CLBuffer
 	{
 	private:

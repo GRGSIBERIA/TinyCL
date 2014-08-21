@@ -8,7 +8,7 @@ namespace tcl
 	/**
 	* ホスト側のメモリ領域を利用するバッファ
 	*/
-	class CLUseHostBuffer : public CLBuffer
+	class CLUseHostBuffer : public CLBuffer<CLUseHostBuffer>
 	{
 	private:
 		CLUseHostBuffer(const CLUseHostBuffer& buf) { }

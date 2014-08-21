@@ -8,7 +8,7 @@ namespace tcl
 	/**
 	* ホスト側のメモリ領域を，デバイス側にコピーしたバッファ
 	*/
-	class CLHostCopyBuffer : public CLBuffer
+	class CLHostCopyBuffer : public CLBuffer<CLHostCopyBuffer>
 	{
 	private:
 		CLHostCopyBuffer(const CLHostCopyBuffer& buf) { }

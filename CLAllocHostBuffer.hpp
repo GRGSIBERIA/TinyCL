@@ -8,7 +8,7 @@ namespace tcl
 	/**
 	* ホスト側にメモリ領域を確保して，それを利用するバッファ
 	*/
-	class CLAllocHostBuffer : public CLBuffer
+	class CLAllocHostBuffer : public CLBuffer<CLAllocHostBuffer>
 	{
 	private:
 		void* hostPtr;
