@@ -163,7 +163,7 @@ namespace tcl
 			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
 			TestKernelArg(resultArg);
 		}
-
+		
 		/**
 		* カーネルに渡すための引数を差し替えor設定する
 		* \param argIndex 引数のインデックス
@@ -215,7 +215,7 @@ namespace tcl
 			cl_event event;
 			auto result = clEnqueueNDRangeKernel(
 				CommandQueue(), Kernel(), setting.Dimension(), 
-				setting.Offset(), setting.WorkerSize(), setting.SplitSize(),
+				setting.Offset(), setting.WorkerRange(), setting.SplitSize(),
 				0, NULL, &event);
 
 			if (wait)

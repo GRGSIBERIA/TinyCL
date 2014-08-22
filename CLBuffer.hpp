@@ -10,7 +10,6 @@
 #include <vector>
 #include <array>
 #include "CLInformation.hpp"
-#include "CLExecute.hpp"
 
 namespace tcl
 {
