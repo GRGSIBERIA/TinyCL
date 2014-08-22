@@ -6,6 +6,7 @@
 #include "CLExecuteProperty.hpp"
 #include "CLDeviceInformation.hpp"
 #include "CLWorkGroupSettings.hpp"
+#include "CLBuffer.hpp"
 
 namespace tcl
 {
@@ -88,8 +89,6 @@ namespace tcl
 				}
 			}
 		}
-
-		
 
 	public:
 		inline cl_command_queue& CommandQueue() {
@@ -187,6 +186,41 @@ namespace tcl
 			SetArg(buffer);
 			argCount++;
 			SetArg(otherBuffers...);
+			argCount = 0;
+		}
+
+		/**
+		* カーネルに渡すためのバッファを設定する
+		* \param[in] buffer CLBufferのインスタンス
+		*/
+		void SetBuffer(CLBuffer& buffer)
+		{
+			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(cl_mem), &buffer.Memory());
+			TestKernelArg(resultArg);
+		}
+
+		/**
+		* カーネルに渡すためのバッファを引数番号を指定して設定する
+		* \param[in] argIndex 引数番号
+		* \param[in] buffer CLBufferのインスタンス
+		*/
+		void SetBuffer(const cl_uint argIndex, CLBuffer& buffer)
+		{
+			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(cl_mem), &buffer.Memory());
+			TestKernelArg(resultArg);
+		}
+
+		/**
+		* カーネルに渡すためのバッファを設定する
+		* \param[in] buffer CLBufferのインスタンス
+		* \param[in] otherBuffers 同じ，CLBufferのインスタンス
+		*/
+		template <typename... Args>
+		void SetBuffer(CLBuffer& buffer, Args&... otherBuffers)
+		{
+			SetBuffer(buffer);
+			argCount++;
+			SetBuffer(otherBuffers...)
 			argCount = 0;
 		}
 

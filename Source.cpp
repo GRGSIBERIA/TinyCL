@@ -28,7 +28,7 @@ int main()
 	auto settings = tcl::CLWorkGroupSettings(1, { 0 }, { N }, { N }).Optimize(device);
 	
 	// ˆø”‚ğİ’è‚·‚é
-	exec.SetArg(x());
+	exec.SetBuffer(x);
 
 	// İ’è‚ğ“n‚µ‚ÄÀs
 	exec.Run(settings);

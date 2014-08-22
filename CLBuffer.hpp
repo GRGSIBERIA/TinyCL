@@ -13,13 +13,16 @@
 
 namespace tcl
 {
+	// CLExecuteで循環参照してしまった
+	class CLExecute;
+
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
 	class CLBuffer
 	{
 	private:
-		CLExecute* exec;
+		CLExecute* exec;	// 循環参照してしまったのでポインタにしてる
 		cl_mem memory;
 		size_t size;
 
