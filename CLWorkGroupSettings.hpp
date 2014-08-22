@@ -35,10 +35,12 @@ namespace tcl
 
 		inline void OptimizeVectors(const CLDeviceInformation& device, std::vector<size_t>& target)
 		{
+			// ワーカーの最大値以下になるように最適化
 			const auto& itemSizes = device.MaxWorkItemSizes();
 			size_t dimension = device.MaxWorkItemDimensions();
 			if (target.size() < dimension)
 				dimension = target.size();
+
 			for (size_t i = 0; i < dimension; ++i)
 			{
 				if (itemSizes[i] < target[i])
@@ -48,6 +50,9 @@ namespace tcl
 
 
 	public:
+		/**
+		* 次元数を返す
+		*/
 		inline cl_uint Dimension() const
 		{
 			return workDimension;
@@ -62,17 +67,17 @@ namespace tcl
 			return *this;
 		}
 
-		inline size_t* WorkerSize()
+		inline size_t* WorkerRange()
 		{
 			return &globalWorker[0];
 		}
 
 		/**
-		* ワーカーの数を設定する
+		* ワーカーの仕事をする範囲を設定する
 		*/
-		inline CLWorkGroupSettings& WorkerSize(const std::vector<size_t>& workerSize)
+		inline CLWorkGroupSettings& WorkerRange(const std::vector<size_t>& workerRange)
 		{
-			globalWorker = std::vector<size_t>(workerSize);
+			globalWorker = std::vector<size_t>(workerRange);
 			return *this;
 		}
 
@@ -83,6 +88,7 @@ namespace tcl
 
 		/**
 		* ワーカーの初期実行位置を設定する
+		* \param[in] offset 初期実行位置の配列，長さは次元数に依存
 		*/
 		inline CLWorkGroupSettings& Offset(const std::vector<size_t>& offset)
 		{
@@ -104,6 +110,9 @@ namespace tcl
 			return *this;
 		}
 
+		/**
+		* 設定を最適化する
+		*/
 		CLWorkGroupSettings& Optimize(const CLDeviceInformation& device)
 		{
 			OptimizeDimension(device);
@@ -121,15 +130,14 @@ namespace tcl
 		* \param[in] offset 次元数に応じた実行位置
 		* \param[in] splitSize ワークアイテム全体の区切り方
 		*/
-		CLWorkGroupSettings(const cl_uint dimension = 0, const std::vector<size_t>& offset = {}, const std::vector<size_t>& workerSize = {}, const std::vector<size_t>& splitSize = {})
+		CLWorkGroupSettings(const cl_uint dimension = 0, const std::vector<size_t>& offset = {}, const std::vector<size_t>& workerRange = {}, const std::vector<size_t>& splitSize = {})
 			:
 			workDimension(dimension),
-			globalWorker(workerSize),
+			globalWorker(workerRange),
 			globalOffset(offset),
 			localWorker(splitSize)
 		{
-			if (workerSize.size() > dimension || splitSize.size() > dimension || offset.size() > dimension)
-				throw CLException("与えられた次数に対して，与えられた引数の長さが小さすぎます");
+			
 		}
 	};
 }
