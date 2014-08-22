@@ -1,6 +1,8 @@
 #ifndef TCL_EXECUTE_HPP
 #define TCL_EXECUTE_HPP
 
+#include <typeinfo>
+
 #include "CLInformation.hpp"
 #include "CLSourceArray.hpp"
 #include "CLExecuteProperty.hpp"
@@ -159,8 +161,27 @@ namespace tcl
 		template <typename T>
 		void SetArg(T& buffer)
 		{
-			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
-			TestKernelArg(resultArg);
+#define TEST_BUFFER(X) typeid(buffer)==typeid(X)
+			// CLBufferを継承しているかどうか検証する
+			// いい方法があれば誰か教えて……
+			if (
+				TEST_BUFFER(CLReadWriteBuffer) || 
+				TEST_BUFFER(CLReadBuffer) || 
+				TEST_BUFFER(CLWriteBuffer) ||
+				TEST_BUFFER(CLBuffer) ||
+				TEST_BUFFER(CLHostCopyBuffer) ||
+				TEST_BUFFER(CLAllocHostBuffer) ||
+				TEST_BUFFER(CLUseHostBuffer))
+#undef TEST_BUFFER
+			{
+				SetBuffer(buffer);
+			}
+			else
+			{
+				cl_int resultArg;
+				resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
+				TestKernelArg(resultArg);
+			}
 		}
 		
 		/**
@@ -183,7 +204,10 @@ namespace tcl
 		template <typename T, typename... Args>
 		void SetArg(T& buffer, Args&... otherBuffers)
 		{
-			SetArg(buffer);
+			if (typeid(buffer) == typeid(CLReadWriteBuffer))
+				SetBuffer(buffer);
+			else
+				SetArg(buffer);
 			argCount++;
 			SetArg(otherBuffers...);
 			argCount = 0;
@@ -193,7 +217,8 @@ namespace tcl
 		* カーネルに渡すためのバッファを設定する
 		* \param[in] buffer CLBufferのインスタンス
 		*/
-		void SetBuffer(CLBuffer& buffer)
+		template <typename T = CLBuffer>
+		void SetBuffer(T& buffer)
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(cl_mem), &buffer.Memory());
 			TestKernelArg(resultArg);
