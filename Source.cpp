@@ -25,16 +25,13 @@ int main()
 	// 1次元配列で，0からスタートし，N個の長さを持っていて，それをN個ごとに区切る
 	auto settings = tcl::CLWorkGroupSettings(1, { 0 }, { N }, { N }).Optimize(device);
 	
-	// 引数を設定する
-	exec.SetArg(x);
-
-	// 設定を渡して実行
-	exec.Run(settings);
+	// 引数を設定して実行
+	exec.SetArg(x).Run(settings);
 
 	// デバイスのメモリから，配列へ読み出す
 	x.Read(input);
 
-	// かくにん
+	// 中身が正しいかどうか確認する
 	for (int i = 0; i < N; ++i)
 		std::cout << i << "," << input[i] << std::endl;
 
