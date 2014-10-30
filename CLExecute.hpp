@@ -159,7 +159,7 @@ namespace tcl
 		* \param[in] buffer カーネルで利用するためのバッファ
 		*/
 		template <typename T>
-		void SetArg(T& buffer)
+		CLExecute& SetArg(T& buffer)
 		{
 #define TEST_BUFFER(X) typeid(buffer)==typeid(X)
 			// CLBufferを継承しているかどうか検証する
@@ -182,6 +182,7 @@ namespace tcl
 				resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
 				TestKernelArg(resultArg);
 			}
+			return *this;
 		}
 		
 		/**
@@ -190,10 +191,11 @@ namespace tcl
 		* \param buffer カーネルで利用したいバッファ
 		*/
 		template <typename T>
-		void SetArg(const cl_uint argIndex, T& buffer)
+		CLExecute& SetArg(const cl_uint argIndex, T& buffer)
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(T), &buffer);
 			TestKernelArg(resultArg);
+			return *this;
 		}
 
 		/**
@@ -202,7 +204,7 @@ namespace tcl
 		* \param[in] otherBuffers 可変長引数
 		*/
 		template <typename T, typename... Args>
-		void SetArg(T& buffer, Args&... otherBuffers)
+		CLExecute& SetArg(T& buffer, Args&... otherBuffers)
 		{
 			if (typeid(buffer) == typeid(CLReadWriteBuffer))
 				SetBuffer(buffer);
@@ -211,6 +213,7 @@ namespace tcl
 			argCount++;
 			SetArg(otherBuffers...);
 			argCount = 0;
+			return *this;
 		}
 
 		/**
@@ -218,10 +221,11 @@ namespace tcl
 		* \param[in] buffer CLBufferのインスタンス
 		*/
 		template <typename T = CLBuffer>
-		void SetBuffer(T& buffer)
+		CLExecute& SetBuffer(T& buffer)
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(cl_mem), &buffer.Memory());
 			TestKernelArg(resultArg);
+			return *this;
 		}
 
 		/**
@@ -229,10 +233,11 @@ namespace tcl
 		* \param[in] argIndex 引数番号
 		* \param[in] buffer CLBufferのインスタンス
 		*/
-		void SetBuffer(const cl_uint argIndex, CLBuffer& buffer)
+		CLExecute& SetBuffer(const cl_uint argIndex, CLBuffer& buffer)
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argIndex, sizeof(cl_mem), &buffer.Memory());
 			TestKernelArg(resultArg);
+			return *this;
 		}
 
 		/**
@@ -241,19 +246,20 @@ namespace tcl
 		* \param[in] otherBuffers 同じ，CLBufferのインスタンス
 		*/
 		template <typename... Args>
-		void SetBuffer(CLBuffer& buffer, Args&... otherBuffers)
+		CLExecute& SetBuffer(CLBuffer& buffer, Args&... otherBuffers)
 		{
 			SetBuffer(buffer);
 			argCount++;
 			SetBuffer(otherBuffers...)
 			argCount = 0;
+			return *this;
 		}
 
 		/**
 		* 単一のカーネルを実行させる
 		* \param[in] wait 実行終了まで待つかどうか
 		*/
-		void Run(const bool wait = true)
+		CLExecute& Run(const bool wait = true)
 		{
 			cl_event event;
 			auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, &event);
@@ -262,6 +268,7 @@ namespace tcl
 				clWaitForEvents(1, &event);
 
 			TestEnqueueTask(resultTask);
+			return *this;
 		}
 
 		/**
@@ -269,7 +276,7 @@ namespace tcl
 		* \param[in] setting 実行範囲を指定するクラスのインスタンス
 		* \param[in] wait 実行終了まで待つかどうか
 		*/
-		void Run(CLWorkGroupSettings& setting, const bool wait = true)
+		CLExecute& Run(CLWorkGroupSettings& setting, const bool wait = true)
 		{
 			cl_event event;
 			auto result = clEnqueueNDRangeKernel(
@@ -281,6 +288,7 @@ namespace tcl
 				clWaitForEvents(1, &event);
 
 			TestNDRange(result);
+			return *this;
 		}
 	};
 }
