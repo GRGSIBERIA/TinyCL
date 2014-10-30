@@ -3,44 +3,42 @@
 
 int main()
 {
-	// GPU‚ÌƒfƒoƒCƒX‚ðŽæ“¾‚·‚é
+	// GPUã®ãƒ‡ãƒã‚¤ã‚¹ã‚’å–å¾—ã™ã‚‹
 	auto device = tcl::information.GetGPU();
 
-	// ƒ\[ƒXƒR[ƒh‚ÌƒRƒ“ƒpƒCƒ‹
+	// ã‚½ãƒ¼ã‚¹ã‚³ãƒ¼ãƒ‰ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«
 	tcl::CLSource source("test.cl", "test", tcl::SourceType::Text);
 
-	// ƒJ[ƒlƒ‹ŽÀsƒNƒ‰ƒX‚Ì¶¬
+	// ã‚«ãƒ¼ãƒãƒ«å®Ÿè¡Œã‚¯ãƒ©ã‚¹ã®ç”Ÿæˆ
 	tcl::CLExecute exec(source, device);
 
-	// ƒfƒoƒCƒX‚É“n‚·‚½‚ß‚Ì”z—ñ‚ð‰Šú‰»
+	// ãƒ‡ãƒã‚¤ã‚¹ã«æ¸¡ã™ãŸã‚ã®é…åˆ—ã‚’åˆæœŸåŒ–
 	const size_t N = 10;
 	std::vector<float> input(N);
 	for (int i = 0; i < N; ++i)
-	{
 		input[i] = i;
-	}
 
-	// ƒfƒoƒCƒX‘¤‚Ìƒƒ‚ƒŠ‚ðŠm•Û
+	// ãƒ‡ãƒã‚¤ã‚¹å´ã®ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿
 	tcl::CLReadWriteBuffer x(exec, input);
 	
-	// •À—ñŽÀs‚µ‚½‚¢ƒJ[ƒlƒ‹iGPUƒNƒ‰ƒXƒ^j‚Ì”‚ðÝ’è‚·‚é
-	// 1ŽŸŒ³”z—ñ‚ÅC0‚©‚çƒXƒ^[ƒg‚µCNŒÂ‚Ì’·‚³‚ðŽ‚Á‚Ä‚¢‚ÄC‚»‚ê‚ðNŒÂ‚²‚Æ‚É‹æØ‚é
+	// ä¸¦åˆ—å®Ÿè¡Œã—ãŸã„ã‚«ãƒ¼ãƒãƒ«ï¼ˆGPUã‚¯ãƒ©ã‚¹ã‚¿ï¼‰ã®æ•°ã‚’è¨­å®šã™ã‚‹
+	// 1æ¬¡å…ƒé…åˆ—ã§ï¼Œ0ã‹ã‚‰ã‚¹ã‚¿ãƒ¼ãƒˆã—ï¼ŒNå€‹ã®é•·ã•ã‚’æŒã£ã¦ã„ã¦ï¼Œãã‚Œã‚’Nå€‹ã”ã¨ã«åŒºåˆ‡ã‚‹
 	auto settings = tcl::CLWorkGroupSettings(1, { 0 }, { N }, { N }).Optimize(device);
 	
-	// ˆø”‚ðÝ’è‚·‚é
+	// å¼•æ•°ã‚’è¨­å®šã™ã‚‹
 	exec.SetArg(x);
 
-	// Ý’è‚ð“n‚µ‚ÄŽÀs
+	// è¨­å®šã‚’æ¸¡ã—ã¦å®Ÿè¡Œ
 	exec.Run(settings);
 
-	// ƒfƒoƒCƒX‚Ìƒƒ‚ƒŠ‚©‚çC”z—ñ‚Ö“Ç‚Ýo‚·
+	// ãƒ‡ãƒã‚¤ã‚¹ã®ãƒ¡ãƒ¢ãƒªã‹ã‚‰ï¼Œé…åˆ—ã¸èª­ã¿å‡ºã™
 	x.Read(input);
 
-	// ‚©‚­‚É‚ñ
+	// ã‹ãã«ã‚“
 	for (int i = 0; i < N; ++i)
 		std::cout << i << "," << input[i] << std::endl;
 
-	// TODO: ‘¬“x‚ðŽæ‚Á‚Ä‚Ý‚½‚¢
+	// TODO: é€Ÿåº¦ã‚’å–ã£ã¦ã¿ãŸã„
 
 	char a;
 	std::cin >> a;
