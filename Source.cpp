@@ -15,8 +15,7 @@ int main()
 	// デバイスに渡すための配列を初期化
 	const size_t N = 10;
 	std::vector<float> input(N);
-	for (int i = 0; i < N; ++i)
-		input[i] = i;
+	for (int i = 0; i < N; ++i) input[i] = i;
 
 	// デバイス側のメモリを確保
 	tcl::CLReadWriteBuffer x(exec, input);
@@ -35,8 +34,5 @@ int main()
 	for (int i = 0; i < N; ++i)
 		std::cout << i << "," << input[i] << std::endl;
 
-	// TODO: 速度を取ってみたい
-
-	char a;
-	std::cin >> a;
+	return 0;
 }
