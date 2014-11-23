@@ -16,7 +16,7 @@ namespace tcl
 	public:
 		/**
 		* デバイス側で読み書きのできるバッファ
-		* \param[in] info OpenCLの情報クラス
+		* \param[in] exec OpenCLの実行クラス
 		* \param[in] size デバイス側に確保する領域
 		*/
 		CLReadWriteBuffer(CLExecute& exec, const size_t size)
@@ -24,7 +24,7 @@ namespace tcl
 
 		/**
 		* デバイス側で読み書きのできるバッファ
-		* \param[in] info OpenCLの情報クラス
+		* \param[in] exec OpenCLの実行クラス
 		* \param[in] data バッファに書き込みたい配列
 		*/
 		template <typename T>
@@ -36,12 +36,24 @@ namespace tcl
 
 		/**
 		* デバイス側で読み書きのできるバッファ
-		* \param[in] info OpenCLの情報クラス
+		* \param[in] exec OpenCLの実行クラス
 		* \param[in] data バッファに書き込みたい配列
 		*/
 		template <typename T, size_t NUM>
 		CLReadWriteBuffer(CLExecute& exec, std::array<T, NUM>& data)
 			: CLBuffer(exec, CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
+		{
+			Write(data);
+		}
+
+		/**
+		* デバイス側で読み書きのできるバッファ
+		* \param[in] exec OpenCLの実行クラス
+		* \param[in] data バッファに書き込みたいデータ
+		*/
+		template <typename T>
+		CLReadWriteBuffer(CLExecute& exec, const T data)
+			: CLBuffer(exec, CL_MEM_READ_WRITE, sizeof(T), NULL)
 		{
 			Write(data);
 		}
