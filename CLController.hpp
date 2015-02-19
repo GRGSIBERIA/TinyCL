@@ -59,10 +59,6 @@ namespace tcl
 			if (setting != nullptr)
 				delete setting;	// 何度も呼び出される対策
 
-			if (exec != nullptr)
-				delete exec;
-
-			exec = new CLExecute(*source, *device);
 			setting = new CLWorkGroupSettings(dimension, offset, workerRange, splitSize);
 			setting->Optimize(*device);
 		}
@@ -92,6 +88,8 @@ namespace tcl
 				throw CLDeviceNotFoundException("対象のデバイスが見つかりませんでした");
 
 			source = new CLSource(sourcePath, kernelFunction, sourceType);
+			exec = new CLExecute(*source, *device);
+			CLBuffer::SetCurrentExecute(exec);
 		}
 
 		/**
@@ -104,6 +102,7 @@ namespace tcl
 		CLController& Setting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
 		{
 			InitSetting(dimension, offset, workerRange, splitSize);
+			return *this;
 		}
 
 		/**
@@ -114,6 +113,7 @@ namespace tcl
 		CLController& Setting(const size_t& offset, const size_t& workerRange)
 		{
 			InitSetting(1, { offset }, { workerRange } , { workerRange });
+			return *this;
 		}
 
 		/**
@@ -123,6 +123,7 @@ namespace tcl
 		CLController& Setting(const size_t& workerRange)
 		{
 			InitSetting(1, { 0 }, { workerRange }, { workerRange });
+			return *this;
 		}
 
 		/**
@@ -132,18 +133,29 @@ namespace tcl
 		CLController& Setting()
 		{
 			InitSetting(0, {}, {}, {});
+			return *this;
 		}
 
-		template <typename T>
+		/**
+		* コードを実行する
+		* @param [in] current カーネルコードの引数
+		*/
 		void Run(CLBuffer& current)
 		{
-
+			exec->SetArg(current);
+			exec->Run(*setting);
 		}
 
+		/**
+		* コードを実行する
+		* @param [in] current カーネルコードの引数
+		* @param [in] others 可変長引数
+		*/
 		template <typename T, typename... Args>
-		void Run(CLBuffer& current, Args& ...)
+		void Run(CLBuffer& current, Args& ...others)
 		{
-			
+			exec->SetArg(current);
+			Run(others...);
 		}
 		
 

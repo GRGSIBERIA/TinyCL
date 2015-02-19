@@ -221,8 +221,7 @@ namespace tcl
 		* カーネルに渡すためのバッファを設定する
 		* \param[in] buffer CLBufferのインスタンス
 		*/
-		template <typename T = CLBuffer>
-		CLExecute& SetBuffer(T& buffer)
+		CLExecute& SetBuffer(CLBuffer& buffer)
 		{
 			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(cl_mem), &buffer.Memory());
 			TestKernelArg(resultArg);
@@ -251,7 +250,7 @@ namespace tcl
 		{
 			SetBuffer(buffer);
 			argCount++;
-			SetBuffer(otherBuffers...)
+			SetBuffer(otherBuffers...);
 			argCount = 0;
 			return *this;
 		}

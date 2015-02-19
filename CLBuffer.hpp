@@ -134,7 +134,7 @@ namespace tcl
 		CLBuffer()
 			: size(0) {}
 
-		CLBuffer(CLExecute& exec, const cl_mem_flags flag, const size_t size, void* hostPtr)
+		CLBuffer(const cl_mem_flags flag, const size_t size, void* hostPtr)
 			: size(size)
 		{
 			memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
@@ -236,6 +236,7 @@ namespace tcl
 
 		/**
 		* バッファが対象とするexecuteを指定
+		* Bufferクラスのインスタンスを生成する前に必要
 		*/
 		static void SetCurrentExecute(CLExecute* exec)
 		{
