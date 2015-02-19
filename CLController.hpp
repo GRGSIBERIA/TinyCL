@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "CLException.hpp"
 #include "CLInformation.hpp"
 #include "CLSource.hpp"
 
@@ -30,8 +31,11 @@ namespace tcl
 				device = &information.GetCPU();
 				break;
 			}
+
+			if (device == nullptr)
+				throw CLDeviceNotFoundException("対象のデバイスが見つかりませんでした");
+
 			source = new CLSource(sourcePath, kernelFunction, sourceType);
-			
 		}
 
 		virtual ~CLController()
