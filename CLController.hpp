@@ -157,10 +157,11 @@ namespace tcl
 		* コードを実行する
 		* @param [in] current カーネルコードの引数
 		*/
-		void Run(CLBuffer& current)
+		CLController& Run(CLBuffer& current)
 		{
 			exec->SetArg(current);
 			exec->Run(*setting);
+			return *this;
 		}
 
 		/**
@@ -169,12 +170,11 @@ namespace tcl
 		* @param [in] others 可変長引数
 		*/
 		template <typename T, typename... Args>
-		void Run(CLBuffer& current, Args& ...others)
+		CLController& Run(CLBuffer& current, Args& ...others)
 		{
 			exec->SetArg(current);
-			Run(others...);
+			return Run(others...);
 		}
-		
 
 		virtual ~CLController()
 		{
