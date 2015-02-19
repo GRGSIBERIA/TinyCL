@@ -106,6 +106,18 @@ namespace tcl
 		}
 
 		/**
+		* @brief 次元数に応じてoffset, workerRangeを揃えてね
+		* @param [in] dimension ワーカーの次元数
+		* @param [in] offset ワーカーの初期位置
+		* @param [in] workerRange 動かすワーカーの数
+		*/
+		CLController& Setting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange)
+		{
+			InitSetting(dimension, offset, workerRange, workerRange);
+			return *this;
+		}
+
+		/**
 		* @brief 1次元として，offsetからスタートし，workerRangeの数だけワーカーを動かす
 		* @param [in] offset ワーカーの初期位置
 		* @param [in] workerRange 動かすワーカーの数
