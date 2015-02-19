@@ -106,7 +106,13 @@ namespace tcl
 		template <typename T>
 		void SafeEnqueueRead(size_t size, T* data)
 		{
-
+			execMutex.lock();
+			auto result = clEnqueueReadBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, size, &data,
+				0, NULL, NULL);
+			execMutex.unlock();
+			ReadTest(result);
 		}
 
 		template <typename T>
@@ -147,9 +153,7 @@ namespace tcl
 		CLBuffer& Write(const std::vector<T>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
-
 			SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
-
 			return *this;
 		}
 
@@ -160,9 +164,7 @@ namespace tcl
 		CLBuffer& Write(const std::array<T, NUM>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
-
 			SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
-
 			return *this;
 		}
 
@@ -174,7 +176,17 @@ namespace tcl
 		CLBuffer& Write(const T& data)
 		{
 			SafeEnqueueWrite(sizeof(T), &data);
+			return *this;
+		}
 
+		/**
+		* ホスト側からデバイス側に転送
+		* \attention 生ポインタ配列を扱う場合
+		*/
+		template <typename T>
+		CLBuffer& Write(T* data, const size_t num)
+		{
+			SafeEnqueueWrite(sizeof(T) * num, data);
 			return *this;
 		}
 
@@ -185,9 +197,7 @@ namespace tcl
 		CLBuffer& Read(std::vector<T>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
-
 			SafeEnqueueRead(sizeof(T) * dequeueData.size(), &dequeueData[0]);
-
 			return *this;
 		}
 
@@ -198,9 +208,7 @@ namespace tcl
 		CLBuffer& Read(std::array<T, NUM>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
-
 			SafeEnqueueRead(sizeof(T) * dequeueData.size(), &dequeueData[0]);
-
 			return *this;
 		}
 
@@ -212,16 +220,23 @@ namespace tcl
 		CLBuffer& Read(T& data)
 		{
 			SafeEnqueueRead(sizeof(T), &data);
-
 			return *this;
 		}
 
+		/**
+		* デバイス側からホスト側に転送
+		* \attention 生ポインタ配列を扱う場合
+		*/
 		template <typename T>
-		CLBuffer& Read(T* data, const size_t size)
+		CLBuffer& Read(T* data, const size_t num)
 		{
-
+			SafeEnqueueRead(sizeof(T) * num, data);
+			return *this;
 		}
 
+		/**
+		* バッファが対象とするexecuteを指定
+		*/
 		static void SetCurrentExecute(CLExecute* exec)
 		{
 			CLBuffer::exec = exec;

@@ -19,8 +19,8 @@ namespace tcl
 		* \param[in] exec OpenCLの実行クラス
 		* \param[in] size デバイス側に確保する領域
 		*/
-		CLReadWriteBuffer(CLExecute& exec, const size_t size)
-			: CLBuffer(exec, CL_MEM_READ_WRITE, size, NULL) { }
+		CLReadWriteBuffer(const size_t size)
+			: CLBuffer(CL_MEM_READ_WRITE, size, NULL) { }
 
 		/**
 		* デバイス側で読み書きのできるバッファ
@@ -28,8 +28,8 @@ namespace tcl
 		* \param[in] data バッファに書き込みたい配列
 		*/
 		template <typename T>
-		CLReadWriteBuffer(CLExecute& exec, std::vector<T>& data)
-			: CLBuffer(exec, CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
+		CLReadWriteBuffer(std::vector<T>& data)
+			: CLBuffer(CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
 		{
 			Write(data);
 		}
@@ -40,8 +40,8 @@ namespace tcl
 		* \param[in] data バッファに書き込みたい配列
 		*/
 		template <typename T, size_t NUM>
-		CLReadWriteBuffer(CLExecute& exec, std::array<T, NUM>& data)
-			: CLBuffer(exec, CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
+		CLReadWriteBuffer(std::array<T, NUM>& data)
+			: CLBuffer(CL_MEM_READ_WRITE, data.size() * sizeof(T), NULL)
 		{
 			Write(data);
 		}
@@ -52,8 +52,8 @@ namespace tcl
 		* \param[in] data バッファに書き込みたいデータ
 		*/
 		template <typename T>
-		CLReadWriteBuffer(CLExecute& exec, const T data)
-			: CLBuffer(exec, CL_MEM_READ_WRITE, sizeof(T), NULL)
+		CLReadWriteBuffer(const T data)
+			: CLBuffer(CL_MEM_READ_WRITE, sizeof(T), NULL)
 		{
 			Write(data);
 		}

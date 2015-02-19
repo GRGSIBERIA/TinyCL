@@ -19,8 +19,8 @@ namespace tcl
 		* \param[in] info OpenCLの情報クラス
 		* \param[in] size デバイス側に確保する領域
 		*/
-		CLWriteBuffer(CLExecute& exec, const size_t size)
-			: CLBuffer(exec, CL_MEM_WRITE_ONLY, size, NULL) { }
+		CLWriteBuffer(const size_t size)
+			: CLBuffer(CL_MEM_WRITE_ONLY, size, NULL) { }
 
 		/**
 		* デバイス側で書き込みのみできるバッファ
@@ -28,8 +28,8 @@ namespace tcl
 		* \param[in] size デバイス側に確保する領域
 		*/
 		template <typename T>
-		CLWriteBuffer(CLExecute& exec, const size_t length)
-			: CLBuffer(exec, CL_MEM_WRITE_ONLY, sizeof(T) * length, NULL) { }
+		CLWriteBuffer(const size_t length)
+			: CLBuffer(CL_MEM_WRITE_ONLY, sizeof(T) * length, NULL) { }
 
 		virtual ~CLWriteBuffer() {}
 

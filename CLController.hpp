@@ -135,15 +135,15 @@ namespace tcl
 		}
 
 		template <typename T>
-		void Run(T& current)
+		void Run(CLBuffer& current)
 		{
 
 		}
 
 		template <typename T, typename... Args>
-		void Run(T& current, Args& ...)
+		void Run(CLBuffer& current, Args& ...)
 		{
-
+			
 		}
 		
 

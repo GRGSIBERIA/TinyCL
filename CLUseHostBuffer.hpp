@@ -20,8 +20,8 @@ namespace tcl
 		* \param[in] size ホスト側のメモリ領域の大きさ
 		* \param[in] hostPtr ホスト側で確保されたメモリ領域
 		*/
-		CLUseHostBuffer(CLExecute& exec, const size_t size, void* hostPtr)
-			: CLBuffer(exec, CL_MEM_USE_HOST_PTR, size, hostPtr) { }
+		CLUseHostBuffer(const size_t size, void* hostPtr)
+			: CLBuffer(CL_MEM_USE_HOST_PTR, size, hostPtr) { }
 
 		virtual ~CLUseHostBuffer() {}
 	};
