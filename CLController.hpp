@@ -32,18 +32,6 @@ namespace tcl
 	};
 
 	/**
-	* @brief バッファの種類
-	*/
-	enum class BufferType
-	{
-		Read,		//!< デバイス側で読み込みのみ
-		Write,		//!< デバイス側で書き込みのみ
-		ReadWrite,	//!< デバイス側で読み書きできる
-		HostCopy,	//!< ホスト側の領域をデバイス側にコピーする
-		UseHost,	//!< ホスト側のメモリ空間を利用する
-	};
-
-	/**
 	* @brief TinyCLを制御するためのコントローラ
 	*/
 	class CLController
