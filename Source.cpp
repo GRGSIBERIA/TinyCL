@@ -13,7 +13,7 @@ int main()
 
 	// デバイス側のメモリを確保
 	tcl::CLReadWriteBuffer buf(input);
-		
+
 	// N個のワーカーを用意し，引数を設定して実行
 	controller.Setting(N).Run(buf);
 
