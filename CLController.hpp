@@ -94,26 +94,43 @@ namespace tcl
 
 		/**
 		* @brief ワーカーの設定を細かく指定する
-		* @param [in] dimension ワーカーの次元数
 		* @param [in] offset ワーカーの初期位置
 		* @param [in] workerRange 動かすワーカーの数
 		* @param [in] splitSize ワーカーの区切り方
 		*/
-		CLController& Setting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
+		CLController& Setting(const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
 		{
-			InitSetting(dimension, offset, workerRange, splitSize);
+			if (offset.size() != workerRange.size() || offset.size() != splitSize.size())
+				throw CLException("ワーカーの次元数が各引数で一致していません");
+			InitSetting(offset.size(), offset, workerRange, splitSize);
 			return *this;
 		}
 
 		/**
 		* @brief 次元数に応じてoffset, workerRangeを揃えてね
-		* @param [in] dimension ワーカーの次元数
 		* @param [in] offset ワーカーの初期位置
 		* @param [in] workerRange 動かすワーカーの数
 		*/
-		CLController& Setting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange)
+		CLController& Setting(const std::vector<size_t>& offset, const std::vector<size_t>& workerRange)
 		{
-			InitSetting(dimension, offset, workerRange, workerRange);
+			if (offset.size() != workerRange.size())
+				throw CLException("ワーカーの次元数が各引数で一致していません");
+			InitSetting(offset.size(), offset, workerRange, workerRange);
+			return *this;
+		}
+
+		/**
+		* @brief とりあえず，ワーカーを多次元で動かしてみたいときに使う
+		* @param [in] workerRange 動かすワーカーの数
+		*/
+		CLController& Setting(const std::vector<size_t>& workerRange)
+		{
+			std::vector<size_t> offset(workerRange.size(), 0);
+			std::vector<size_t> splitSize(workerRange.size());
+			for (int i = 0; i < workerRange.size(); ++i)
+				splitSize[i] = workerRange[i];
+
+			InitSetting(offset.size(), offset, workerRange, workerRange);
 			return *this;
 		}
 
