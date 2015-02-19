@@ -176,6 +176,15 @@ namespace tcl
 			return Run(others...);
 		}
 
+		/**
+		* カーネルコードの実行を待つ
+		*/
+		CLController& Wait()
+		{
+			exec->Wait();
+			return *this;
+		}
+
 		virtual ~CLController()
 		{
 			delete exec;
