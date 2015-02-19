@@ -15,7 +15,7 @@ int main()
 	tcl::CLReadWriteBuffer buf(input);
 
 	// N個のワーカーを用意し，引数を設定して実行
-	controller.Setting(N).Run(buf);
+	controller.Setting(N).Run(buf).Wait();
 
 	// デバイスのメモリから，配列へ読み出す
 	buf.Read(input);
