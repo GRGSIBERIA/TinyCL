@@ -44,6 +44,18 @@ namespace tcl
 		CLFailedAllacException(const std::string& cause)
 			: CLException(cause) {}
 	};
+
+	/**
+	* 指定したデバイスが見つからない
+	*/
+	class CLNotFoundDeviceException : public CLException
+	{
+		/**
+		* 指定したデバイスが見つからない
+		*/
+		CLNotFoundDeviceException(const std::string& cause)
+			: CLException(cause) {}
+	};
 }
 
 #endif
