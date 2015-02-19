@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <array>
+#include <mutex>
 #include "CLInformation.hpp"
 
 namespace tcl
@@ -22,7 +23,8 @@ namespace tcl
 	class CLBuffer
 	{
 	private:
-		CLExecute* exec;	// 循環参照してしまったのでポインタにしてる
+		static CLExecute* exec;			// 循環参照してしまったのでポインタにしてる
+		static std::mutex execMutex;	// マルチスレッド対策
 		cl_mem memory;
 		size_t size;
 
@@ -101,15 +103,33 @@ namespace tcl
 			}
 		}
 
+		template <typename T>
+		void SafeEnqueueRead(size_t size, T* data)
+		{
+
+		}
+
+		template <typename T>
+		void SafeEnqueueWrite(size_t size, T* data)
+		{
+			execMutex.lock();
+			auto result = clEnqueueWriteBuffer(
+				exec->CommandQueue(), memory, CL_TRUE,
+				0, size, data,
+				0, NULL, NULL);
+			execMutex.unlock();
+			ResultTest(result);
+		}
+
 	protected:
 		/**
 		* 生で扱うのは危険なのでデフォルトコンストラクタは禁止
 		*/
 		CLBuffer()
-			: exec(NULL), size(0) {}
+			: size(0) {}
 
 		CLBuffer(CLExecute& exec, const cl_mem_flags flag, const size_t size, void* hostPtr)
-			: exec(&exec), size(size)
+			: size(size)
 		{
 			memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
 		}
@@ -128,11 +148,7 @@ namespace tcl
 		{
 			SizeTest<T>(enqueueData.size());
 
-			auto result = clEnqueueWriteBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * enqueueData.size(), &enqueueData[0], 
-				0, NULL, NULL);
-			ResultTest(result);
+			SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
 
 			return *this;
 		}
@@ -145,11 +161,7 @@ namespace tcl
 		{
 			SizeTest<T>(enqueueData.size());
 
-			auto result = clEnqueueWriteBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * enqueueData.size(), &enqueueData[0],
-				0, NULL, NULL);
-			ResultTest(result);
+			SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
 
 			return *this;
 		}
@@ -161,11 +173,7 @@ namespace tcl
 		template <typename T>
 		CLBuffer& Write(const T& data)
 		{
-			auto result = clEnqueueWriteBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T), &data,
-				0, NULL, NULL);
-			ResultTest(result);
+			SafeEnqueueWrite(sizeof(T), &data);
 
 			return *this;
 		}
@@ -178,11 +186,7 @@ namespace tcl
 		{
 			SizeTest<T>(dequeueData.size());
 
-			auto result = clEnqueueReadBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
-				0, NULL, NULL);
-			ReadTest(result);
+			SafeEnqueueRead(sizeof(T) * dequeueData.size(), &dequeueData[0]);
 
 			return *this;
 		}
@@ -194,13 +198,8 @@ namespace tcl
 		CLBuffer& Read(std::array<T, NUM>& dequeueData)
 		{
 			SizeTest<T>(dequeueData.size());
-			auto size = sizeof(T) * dequeueData.size();
 
-			auto result = clEnqueueReadBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T) * dequeueData.size(), &dequeueData[0],
-				0, NULL, NULL);
-			ReadTest(result);
+			SafeEnqueueRead(sizeof(T) * dequeueData.size(), &dequeueData[0]);
 
 			return *this;
 		}
@@ -212,17 +211,25 @@ namespace tcl
 		template <typename T>
 		CLBuffer& Read(T& data)
 		{
-			auto result = clEnqueueReadBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
-				0, sizeof(T), &data,
-				0, NULL, NULL);
-			ReadTest(result);
+			SafeEnqueueRead(sizeof(T), &data);
 
 			return *this;
 		}
 
-		
+		template <typename T>
+		CLBuffer& Read(T* data, const size_t size)
+		{
+
+		}
+
+		static void SetCurrentExecute(CLExecute* exec)
+		{
+			CLBuffer::exec = exec;
+		}
 	};
+
+	CLExecute* CLBuffer::exec = nullptr;
+	std::mutex CLBuffer::execMutex;
 }
 
 #endif
