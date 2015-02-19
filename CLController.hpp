@@ -1,10 +1,12 @@
-#pragma once
+#ifndef TCL_CONTROLLER_HPP
+#define TCL_CONTROLLER_HPP
 
 #include <string>
 #include "CLException.hpp"
 #include "CLInformation.hpp"
 #include "CLSource.hpp"
 #include "CLWorkGroupSettings.hpp"
+#include "CLExecute.hpp"
 
 namespace tcl
 {
@@ -25,11 +27,20 @@ namespace tcl
 		CLSource* source;
 		const CLDeviceInformation* device;
 		CLWorkGroupSettings* setting;
+		CLExecute* exec;
 
 	private:
 		void InitSetting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
 		{
+			if (setting != nullptr)
+				delete setting;	// 何度も呼び出される対策
 
+			if (exec != nullptr)
+				delete exec;
+
+			exec = new CLExecute(*source, *device);
+			setting = new CLWorkGroupSettings(dimension, offset, workerRange, splitSize);
+			setting->Optimize(*device);
 		}
 
 	public:
@@ -59,24 +70,55 @@ namespace tcl
 			source = new CLSource(sourcePath, kernelFunction, sourceType);
 		}
 
-		CLController& Setting(const cl_uint dimension = 0, const std::vector<size_t>& offset = {}, const std::vector<size_t>& workerRange = {}, const std::vector<size_t>& splitSize = {})
+		/**
+		* @brief ワーカーの設定を細かく指定する
+		* @param [in] dimension ワーカーの次元数
+		* @param [in] offset ワーカーの初期位置
+		* @param [in] workerRange 動かすワーカーの数
+		* @param [in] splitSize ワーカーの区切り方
+		*/
+		CLController& Setting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
 		{
-			if (setting != nullptr)
-				delete setting;	// 何度も呼び出される対策
-
-			setting = new CLWorkGroupSettings(dimension, offset, workerRange, splitSize);
-			setting->Optimize(*device);
+			InitSetting(dimension, offset, workerRange, splitSize);
 		}
 
-		CLController& Setting(const cl_uint dimension = 0, const std::vector<size_t>& workerRange = {})
+		/**
+		* @brief 1次元として，offsetからスタートし，workerRangeの数だけワーカーを動かす
+		* @param [in] offset ワーカーの初期位置
+		* @param [in] workerRange 動かすワーカーの数
+		*/
+		CLController& Setting(const size_t& offset, const size_t& workerRange)
 		{
-
+			InitSetting(1, { offset }, { workerRange } , { workerRange });
 		}
+
+		/**
+		* @brief 1次元として，wokerRangeの数だけワーカーを動かす
+		* @param [in] workerRange 動かすワーカーの数
+		*/
+		CLController& Setting(const size_t& workerRange)
+		{
+			InitSetting(1, { 0 }, { workerRange }, { workerRange });
+		}
+
+		/**
+		* @brief 何も細かい設定をしない
+		* @warning エラーが出るかもしれないので非推奨
+		*/
+		CLController& Setting()
+		{
+			InitSetting(0, {}, {}, {});
+		}
+
+		
 
 		virtual ~CLController()
 		{
+			delete exec;
 			delete setting;
 			delete source;
 		}
 	};
 }
+
+#endif

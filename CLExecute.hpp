@@ -3,6 +3,7 @@
 
 #include <typeinfo>
 
+
 #include "CLInformation.hpp"
 #include "CLSourceArray.hpp"
 #include "CLExecuteProperty.hpp"
