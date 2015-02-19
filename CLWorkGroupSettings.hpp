@@ -139,13 +139,6 @@ namespace tcl
 		{
 			
 		}
-
-		CLWorkGroupSettings(const cl_uint dimension = 0, const std::vector<size_t>& workerRange = {})
-			:
-			workDimension(dimension),
-			globalWorker(workerRange),
-			globalOffset({ 0 }),
-			localWorker({ workerRange.size() })
 	};
 }
 

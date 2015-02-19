@@ -10,7 +10,7 @@ namespace tcl
 	/**
 	* ソースコードの種類
 	*/
-	enum SourceType
+	enum class SourceType
 	{
 		Text,	/// オンライン
 		Binary	/// オフライン

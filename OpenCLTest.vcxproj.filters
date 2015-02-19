@@ -16,9 +16,6 @@
     <Filter Include="ヘッダー ファイル\Buffer">
       <UniqueIdentifier>{9c27e302-a57b-458a-99d6-224bc0cc3473}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ヘッダー ファイル\Exception">
-      <UniqueIdentifier>{d9cf6e0f-57e7-4a76-8a93-9803993e354b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source.cpp">
@@ -68,10 +65,13 @@
     <ClInclude Include="TinyCL.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="CLException.hpp">
-      <Filter>ヘッダー ファイル\Exception</Filter>
-    </ClInclude>
     <ClInclude Include="CLWorkGroupSettings.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CLController.hpp">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="CLException.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

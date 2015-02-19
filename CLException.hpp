@@ -50,6 +50,7 @@ namespace tcl
 	*/
 	class CLDeviceNotFoundException : public CLException
 	{
+	public:
 		/**
 		* 指定したデバイスが見つからない
 		*/

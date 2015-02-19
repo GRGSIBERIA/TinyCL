@@ -66,13 +66,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(IncludePath)</IncludePath>
+    <IncludePath>$(IncludePath);C:\Users\Eiichi\Documents\GitHub\TinyCL</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>$(CUDA_INC_PATH);$(IncludePath)</IncludePath>
+    <IncludePath>$(CUDA_INC_PATH);$(IncludePath);C:\Users\Eiichi\Documents\GitHub\TinyCL</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>$(CUDA_INC_PATH);$(IncludePath)</IncludePath>
@@ -146,6 +146,7 @@
   <ItemGroup>
     <ClInclude Include="CLAllocHostBuffer.hpp" />
     <ClInclude Include="CLBuffer.hpp" />
+    <ClInclude Include="CLController.hpp" />
     <ClInclude Include="CLException.hpp" />
     <ClInclude Include="CLExecute.hpp" />
     <ClInclude Include="CLExecuteProperty.hpp" />
