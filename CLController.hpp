@@ -2,11 +2,23 @@
 #define TCL_CONTROLLER_HPP
 
 #include <string>
-#include "CLException.hpp"
+
+#include "CLDeviceInformation.hpp"
 #include "CLInformation.hpp"
+
 #include "CLSource.hpp"
+#include "CLSourceArray.hpp"
+
 #include "CLWorkGroupSettings.hpp"
+#include "CLExecuteProperty.hpp"
 #include "CLExecute.hpp"
+
+#include "CLAllocHostBuffer.hpp"
+#include "CLHostCopyBuffer.hpp"
+#include "CLReadBuffer.hpp"
+#include "CLReadWriteBuffer.hpp"
+#include "CLUseHostBuffer.hpp"
+#include "CLWriteBuffer.hpp"
 
 namespace tcl
 {
@@ -17,6 +29,18 @@ namespace tcl
 	{
 		GPU,
 		CPU
+	};
+
+	/**
+	* @brief バッファの種類
+	*/
+	enum class BufferType
+	{
+		Read,		//!< デバイス側で読み込みのみ
+		Write,		//!< デバイス側で書き込みのみ
+		ReadWrite,	//!< デバイス側で読み書きできる
+		HostCopy,	//!< ホスト側の領域をデバイス側にコピーする
+		UseHost,	//!< ホスト側のメモリ空間を利用する
 	};
 
 	/**
@@ -110,6 +134,17 @@ namespace tcl
 			InitSetting(0, {}, {}, {});
 		}
 
+		template <typename T>
+		void Run(T& current)
+		{
+
+		}
+
+		template <typename T, typename... Args>
+		void Run(T& current, Args& ...)
+		{
+
+		}
 		
 
 		virtual ~CLController()
