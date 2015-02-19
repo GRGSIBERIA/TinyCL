@@ -17,6 +17,7 @@ namespace tcl
 	{
 	private:
 		CLExecuteProperty executeProperty;
+		cl_event event;
 
 		unsigned argCount;
 
@@ -259,13 +260,9 @@ namespace tcl
 		* 単一のカーネルを実行させる
 		* \param[in] wait 実行終了まで待つかどうか
 		*/
-		CLExecute& Run(const bool wait = true)
+		CLExecute& Run()
 		{
-			cl_event event;
 			auto resultTask = clEnqueueTask(CommandQueue(), Kernel(), 0, NULL, &event);
-
-			if (wait)
-				clWaitForEvents(1, &event);
 
 			TestEnqueueTask(resultTask);
 			return *this;
@@ -276,18 +273,20 @@ namespace tcl
 		* \param[in] setting 実行範囲を指定するクラスのインスタンス
 		* \param[in] wait 実行終了まで待つかどうか
 		*/
-		CLExecute& Run(CLWorkGroupSettings& setting, const bool wait = true)
+		CLExecute& Run(CLWorkGroupSettings& setting)
 		{
-			cl_event event;
 			auto result = clEnqueueNDRangeKernel(
 				CommandQueue(), Kernel(), setting.Dimension(), 
 				setting.Offset(), setting.WorkerRange(), setting.SplitSize(),
 				0, NULL, &event);
 
-			if (wait)
-				clWaitForEvents(1, &event);
-
 			TestNDRange(result);
+			return *this;
+		}
+
+		CLExecute& Wait()
+		{
+			clWaitForEvents(1, &event);
 			return *this;
 		}
 	};
