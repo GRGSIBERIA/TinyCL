@@ -3,12 +3,9 @@
 
 int main()
 {
-	// デバイスに渡すための配列を初期化
+	// デバイスに渡すための配列を0で初期化
 	const size_t N = 10;
-	std::vector<float> inputA(N), inputB(N);
-	for (int i = 0; i < N; ++i)	{
-		inputA[i] = i; inputB[i];
-	}
+	std::vector<float> inputA(N, 0), inputB(N, 0);
 
 	// ソースコードのコンパイル
 	tcl::CLController controller("test.cl", "TestMain");
@@ -25,7 +22,7 @@ int main()
 
 	// 中身が正しいかどうか確認する
 	for (int i = 0; i < N; ++i)
-		std::cout << i << "," << inputA[i] << inputB[i] << std::endl;
+		std::cout << i << "," << inputA[i] << "," << inputB[i] << std::endl;
 
 	return 0;
 }
