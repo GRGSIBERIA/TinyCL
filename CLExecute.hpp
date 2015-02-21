@@ -181,7 +181,7 @@ namespace tcl
 			else
 			{
 				cl_int resultArg;
-				resultArg = clSetKernelArg(Kernel(), argCount, sizeof(T), &buffer);
+				resultArg = clSetKernelArg(Kernel(), argCount++, sizeof(T), &buffer);
 				TestKernelArg(resultArg);
 			}
 			return *this;
@@ -224,7 +224,7 @@ namespace tcl
 		*/
 		CLExecute& SetBuffer(CLBuffer& buffer)
 		{
-			const auto resultArg = clSetKernelArg(Kernel(), argCount, sizeof(cl_mem), &buffer.Memory());
+			const auto resultArg = clSetKernelArg(Kernel(), argCount++, sizeof(cl_mem), &buffer.Memory());
 			TestKernelArg(resultArg);
 			return *this;
 		}
