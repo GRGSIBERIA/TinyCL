@@ -109,7 +109,7 @@ namespace tcl
 			execMutex.lock();
 			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
-				0, size, &data,
+				0, size, data,
 				0, NULL, NULL);
 			execMutex.unlock();
 			ReadTest(result);
