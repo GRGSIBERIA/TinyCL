@@ -5,24 +5,27 @@ int main()
 {
 	// デバイスに渡すための配列を初期化
 	const size_t N = 10;
-	std::vector<float> input(N);
-	for (int i = 0; i < N; ++i) input[i] = i;
+	std::vector<float> inputA(N), inputB(N);
+	for (int i = 0; i < N; ++i)	{
+		inputA[i] = i; inputB[i];
+	}
 
 	// ソースコードのコンパイル
-	tcl::CLController controller("test.cl", "test");
+	tcl::CLController controller("test.cl", "TestMain");
 
 	// デバイス側のメモリを確保
-	tcl::CLReadWriteBuffer buf(input);
+	tcl::CLReadWriteBuffer bufA(inputA), bufB(inputB);
 
 	// N個のワーカーを用意し，引数を設定して実行
-	controller.Setting(N).Run(buf).Wait();
+	controller.Setting(N).Run(bufA, bufB).Wait();
 
 	// デバイスのメモリから，配列へ読み出す
-	buf.Read(input);
+	bufA.Read(inputA);
+	bufB.Read(inputB);
 
 	// 中身が正しいかどうか確認する
 	for (int i = 0; i < N; ++i)
-		std::cout << i << "," << input[i] << std::endl;
+		std::cout << i << "," << inputA[i] << inputB[i] << std::endl;
 
 	return 0;
 }
