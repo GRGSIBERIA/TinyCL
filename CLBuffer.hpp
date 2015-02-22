@@ -104,20 +104,20 @@ namespace tcl
 		}
 
 		template <typename T>
-		void SafeEnqueueRead(size_t size, T* data)
+		void SafeEnqueueRead(CLExecute& exec, size_t size, T* data)
 		{
 			auto result = clEnqueueReadBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
+				exec.CommandQueue(), memory, CL_TRUE,
 				0, size, data,
 				0, NULL, NULL);
 			ReadTest(result);
 		}
 
 		template <typename T>
-		void SafeEnqueueWrite(size_t size, T* data)
+		void SafeEnqueueWrite(CLExecute& exec, size_t size, T* data)
 		{
 			auto result = clEnqueueWriteBuffer(
-				exec->CommandQueue(), memory, CL_TRUE,
+				exec.CommandQueue(), memory, CL_TRUE,
 				0, size, data,
 				0, NULL, NULL);
 			ResultTest(result);
@@ -130,8 +130,9 @@ namespace tcl
 		CLBuffer()
 			: size(0) {}
 
-		CLBuffer(const cl_mem_flags flag, const size_t size, void* hostPtr)
-			: size(size)
+		template <typename T>
+		CLBuffer(const cl_mem_flags flag, const size_t& size, void* hostPtr, T* hostDataPtr)
+			: size(size), hostDataPtr(hostDataPtr)
 		{
 			memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
 		}
@@ -145,98 +146,21 @@ namespace tcl
 		/**
 		* ホスト側からデバイス側に転送
 		*/
-		template <typename T>
-		CLBuffer& Write(std::vector<T>& enqueueData)
+		CLBuffer& Write(CLExecute& exec)
 		{
-			SizeTest<T>(enqueueData.size());
-			//SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
-			hostDataPtr = &enqueueData[0];
-			size = sizeof(T) * enqueueData.size();
-			return *this;
-		}
-
-		/**
-		* ホスト側からデバイス側に転送
-		*/
-		template <typename T, size_t NUM>
-		CLBuffer& Write(std::array<T, NUM>& enqueueData)
-		{
-			SizeTest<T>(enqueueData.size());
-			//SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
-			hostDataPtr = &enqueueData[0];
-			size = sizeof(T) * enqueueData.size();
-			return *this;
-		}
-
-		/**
-		* ホスト側からデバイス側に転送
-		* \attention 配列投げると落ちます
-		*/
-		template <typename TYPE>
-		CLBuffer& Write(TYPE& data)
-		{
-			//SafeEnqueueWrite(sizeof(TYPE), &data);
-			hostDataPtr = &data;
-			size = sizeof(TYPE);
-			return *this;
-		}
-
-		/**
-		* ホスト側からデバイス側に転送
-		* \attention 生ポインタ配列を扱う場合
-		*/
-		template <typename T>
-		CLBuffer& Write(TYPE* data, const size_t num)
-		{
-			//SafeEnqueueWrite(sizeof(TYPE) * num, data);
-			hostDataPtr = &data;
-			size = sizeof(T);
+			SafeEnqueueWrite(exec, size, hostDataPtr);
 			return *this;
 		}
 
 		/**
 		* デバイス側からホスト側に転送
 		*/
-		template <typename T>
-		CLBuffer& Read(std::vector<T>& dequeueData)
+		CLBuffer& Read(CLExecute& exec)
 		{
-			SizeTest<T>(dequeueData.size());
-			SafeEnqueueRead(sizeof(T) * dequeueData.size(), &dequeueData[0]);
+			SafeEnqueueRead(size, hostDataPtr);
 			return *this;
 		}
 
-		/**
-		* デバイス側からホスト側に転送
-		*/
-		template <typename T, size_t NUM>
-		CLBuffer& Read(std::array<T, NUM>& dequeueData)
-		{
-			SizeTest<T>(dequeueData.size());
-			SafeEnqueueRead(sizeof(T) * dequeueData.size(), &dequeueData[0]);
-			return *this;
-		}
-
-		/**
-		* デバイス側からホスト側に転送
-		* \attention 配列投げると落ちます
-		*/
-		template <typename TYPE>
-		CLBuffer& Read(TYPE& data)
-		{
-			SafeEnqueueRead(sizeof(TYPE), &data);
-			return *this;
-		}
-
-		/**
-		* デバイス側からホスト側に転送
-		* \attention 生ポインタ配列を扱う場合
-		*/
-		template <typename TYPE>
-		CLBuffer& Read(TYPE* data, const size_t num)
-		{
-			SafeEnqueueRead(sizeof(TYPE) * num, data);
-			return *this;
-		}
 	};
 }
 
