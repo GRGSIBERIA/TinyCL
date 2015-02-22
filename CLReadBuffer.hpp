@@ -8,7 +8,6 @@ namespace tcl
 	/**
 	* デバイス側で読み込みのみできるバッファ
 	*/
-	template <typename T>
 	class CLReadBuffer : public CLBuffer
 	{
 	public:

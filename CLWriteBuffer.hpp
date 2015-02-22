@@ -8,7 +8,6 @@ namespace tcl
 	/**
 	* デバイス側で書き込みのみできるバッファ
 	*/
-	template <typename T>
 	class CLWriteBuffer : public CLBuffer
 	{
 	public:
