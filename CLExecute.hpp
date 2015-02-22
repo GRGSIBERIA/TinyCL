@@ -170,10 +170,7 @@ namespace tcl
 				TEST_BUFFER(CLReadWriteBuffer) || 
 				TEST_BUFFER(CLReadBuffer) || 
 				TEST_BUFFER(CLWriteBuffer) ||
-				TEST_BUFFER(CLBuffer) ||
-				TEST_BUFFER(CLHostCopyBuffer) ||
-				TEST_BUFFER(CLAllocHostBuffer) ||
-				TEST_BUFFER(CLUseHostBuffer))
+				TEST_BUFFER(CLBuffer))
 #undef TEST_BUFFER
 			{
 				SetBuffer(buffer);
