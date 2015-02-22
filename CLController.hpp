@@ -186,7 +186,7 @@ namespace tcl
 		template <typename BUFFER, typename... Args>
 		CLController& Run(BUFFER& buffer, Args&... args)
 		{
-			exec->SetArg(buffer);
+			SetArg(buffer);
 			Run(args...);
 			return *this;
 		}
