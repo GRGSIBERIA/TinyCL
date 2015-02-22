@@ -45,10 +45,6 @@ namespace tcl
 			return memory;
 		}
 
-		cl_mem& operator() () {
-			return memory;
-		}
-
 	private:
 		/**
 		* ÉRÉsÅ[ã÷é~

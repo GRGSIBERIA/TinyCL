@@ -8,31 +8,44 @@ namespace tcl
 	/**
 	* デバイス側で書き込みのみできるバッファ
 	*/
+	template <typename T>
 	class CLWriteBuffer : public CLBuffer
 	{
-	private:
-		CLWriteBuffer(const CLWriteBuffer& buf) { }
-
 	public:
 		/**
 		* デバイス側で書き込みのみできるバッファ
-		* \param[in] info OpenCLの情報クラス
-		* \param[in] size デバイス側に確保する領域
+		* \param[in] data 実行後に転送対象になる配列
 		*/
-		CLWriteBuffer(const size_t size)
-			: CLBuffer(CL_MEM_WRITE_ONLY, size, NULL) { }
+		template <typename T>
+		CLWriteBuffer(std::vector<T>& data)
+			: CLBuffer(CL_MEM_WRITE_ONLY, data.size() * sizeof(T), NULL, &data[0]) { }
 
 		/**
 		* デバイス側で書き込みのみできるバッファ
-		* \param[in] info OpenCLの情報クラス
-		* \param[in] size デバイス側に確保する領域
+		* \param[in] data 実行後に転送対象になる配列
+		*/
+		template <typename T, size_t NUM>
+		CLWriteBuffer(std::array<T, NUM>& data)
+			: CLBuffer(CL_MEM_WRITE_ONLY, NUM * sizeof(T), NULL, &data[0]) { }
+
+		/**
+		* デバイス側で書き込みのみできるバッファ
+		* \param[in] data 実行後に転送対象になるデータ
 		*/
 		template <typename T>
-		CLWriteBuffer(const size_t length)
-			: CLBuffer(CL_MEM_WRITE_ONLY, sizeof(T) * length, NULL) { }
+		CLWriteBuffer(T& data)
+			: CLBuffer(CL_MEM_WRITE_ONLY, sizeof(T), NULL, &data) { }
+
+		/**
+		* デバイス側で書き込みのみできるバッファ
+		* \param[in] data 実行後に転送対象になる配列データのアドレス
+		* \param[in] num 書き込みたいデータの個数
+		*/
+		template <typename T>
+		CLWriteBuffer(T* data, const size_t& num)
+			: CLBuffer(CL_MEM_WRITE_ONLY, sizeof(T) * num, NULL, data) { }
 
 		virtual ~CLWriteBuffer() {}
-
 	};
 }
 
