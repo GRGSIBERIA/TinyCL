@@ -192,10 +192,10 @@ namespace tcl
 		}
 
 		/**
-		* カーネルコードの実行を待つ
-		* \attention Wait関数を呼び出さないと，結果が書き込まれません
+		* カーネルコードの終了を待ち，結果を書き込む
+		* \attention この関数を呼び出さないと，結果が書き込まれません
 		*/
-		CLController& Wait()
+		CLController& Result()
 		{
 			exec->Wait();
 			

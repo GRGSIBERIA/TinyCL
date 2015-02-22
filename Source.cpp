@@ -14,7 +14,7 @@ int main()
 	tcl::CLReadWriteBuffer bufA(inputA), bufB(inputB);
 
 	// N個のワーカーを用意し，引数を設定して実行，Wait関数で結果を書き込む
-	controller.Setting(N).Run(bufA, bufB).Wait();
+	controller.Setting(N).Run(bufA, bufB).Result();
 
 	// 中身が正しいかどうか確認する
 	for (int i = 0; i < N; ++i)
