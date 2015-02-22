@@ -11,12 +11,10 @@
 #include <array>
 #include <mutex>
 #include "CLInformation.hpp"
+#include "CLExecute.hpp"
 
 namespace tcl
 {
-	// CLExecuteで循環参照してしまった
-	class CLExecute;
-
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
@@ -98,19 +96,19 @@ namespace tcl
 			}
 		}
 
-		void SafeEnqueueRead(CLExecute& exec)
+		void SafeEnqueueRead(const cl_command_queue& command)
 		{
 			auto result = clEnqueueReadBuffer(
-				exec.CommandQueue(), memory, CL_TRUE,
+				command, memory, CL_TRUE,
 				0, size, hostDataPtr,
 				0, NULL, NULL);
 			ReadTest(result);
 		}
 
-		void SafeEnqueueWrite(CLExecute& exec)
+		void SafeEnqueueWrite(const cl_command_queue& command)
 		{
 			auto result = clEnqueueWriteBuffer(
-				exec.CommandQueue(), memory, CL_TRUE,
+				command, memory, CL_TRUE,
 				0, size, hostDataPtr,
 				0, NULL, NULL);
 			ResultTest(result);
@@ -172,18 +170,18 @@ namespace tcl
 		/**
 		* ホスト側からデバイス側に転送
 		*/
-		CLBuffer& Write(CLExecute& exec)
+		CLBuffer& Write(const cl_command_queue& command)
 		{
-			SafeEnqueueWrite(exec);
+			SafeEnqueueWrite(command);
 			return *this;
 		}
 
 		/**
 		* デバイス側からホスト側に転送
 		*/
-		CLBuffer& Read(CLExecute& exec)
+		CLBuffer& Read(const cl_command_queue& command)
 		{
-			SafeEnqueueRead(exec);
+			SafeEnqueueRead(command);
 			return *this;
 		}
 	};
