@@ -13,11 +13,9 @@
 #include "CLExecuteProperty.hpp"
 #include "CLExecute.hpp"
 
-#include "CLAllocHostBuffer.hpp"
-#include "CLHostCopyBuffer.hpp"
+#include "CLBuffer.hpp"
 #include "CLReadBuffer.hpp"
 #include "CLReadWriteBuffer.hpp"
-#include "CLUseHostBuffer.hpp"
 #include "CLWriteBuffer.hpp"
 
 namespace tcl
@@ -40,6 +38,8 @@ namespace tcl
 		const CLDeviceInformation* device;
 		CLWorkGroupSettings* setting;
 		CLExecute* exec;
+
+		std::vector<CLBuffer*> argumentBuffer;
 
 	private:
 		void InitSetting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
@@ -77,7 +77,6 @@ namespace tcl
 
 			source = new CLSource(sourcePath, kernelFunction, sourceType);
 			exec = new CLExecute(*source, *device);
-			CLBuffer::SetCurrentExecute(exec);
 		}
 
 		/**
@@ -144,22 +143,13 @@ namespace tcl
 		}
 
 		/**
-		* @brief 何も細かい設定をしない
-		* @warning エラーが出るかもしれないので非推奨
-		*/
-		CLController& Setting()
-		{
-			InitSetting(0, {}, {}, {});
-			return *this;
-		}
-
-		/**
 		* コードを実行する
 		* @param [in] current カーネルコードの引数
 		*/
 		template <typename T>
 		CLController& Run(T& current)
 		{
+			argumentBuffer.push_back(&current);
 			exec->SetArg(current);
 			exec->Run(*setting);
 			return *this;
