@@ -119,6 +119,11 @@ namespace tcl
 			ResultTest(result);
 		}
 
+		cl_mem CreateBuffer(const cl_mem_flags& flag)
+		{
+			return clCreateBuffer(information.context, flag, size, NULL, &information.result)
+		}
+
 	protected:
 		/**
 		* 生で扱うのは危険なのでデフォルトコンストラクタは禁止
@@ -126,11 +131,39 @@ namespace tcl
 		CLBuffer()
 			: size(0) {}
 
+		//template <typename T>
+		//CLBuffer(const cl_mem_flags flag, const size_t& size, void* hostPtr, T* hostDataPtr)
+		//	: size(size), hostDataPtr(hostDataPtr)
+		//{
+		//	memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
+		//}
+
 		template <typename T>
-		CLBuffer(const cl_mem_flags flag, const size_t& size, void* hostPtr, T* hostDataPtr)
-			: size(size), hostDataPtr(hostDataPtr)
+		CLBuffer(const cl_mem_flags& flag, std::vector<T>& data)
+			: size(data.size() * sizeof(T)), hostDataPtr(&data[0])
 		{
-			memory = clCreateBuffer(information.context, flag, size, hostPtr, &information.result);
+			memory = CreateBuffer(flag);
+		}
+
+		template <typename T, size_t NUM>
+		CLBuffer(const cl_mem_flags& flag, std::array<T, NUM>& data)
+			: size(data.size() * sizeof(T)), hostDataPtr(&data[0])
+		{
+			memory = CreateBuffer(flag);
+		}
+
+		template <typename T>
+		CLBuffer(const cl_mem_flags& flag, T& data)
+			: size(sizeof(T)), hostDataPtr(&data)
+		{
+			memory = CreateBuffer(flag);
+		}
+
+		template <typename T>
+		CLBuffer(const cl_mem_flags& flag, T* data, const size_t& num)
+			: size(sizeof(T) * num), hostDataPtr(data)
+		{
+			memory = CreateBuffer(flag);
 		}
 
 	public:

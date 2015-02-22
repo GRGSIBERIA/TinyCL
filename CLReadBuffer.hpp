@@ -18,7 +18,7 @@ namespace tcl
 		*/
 		template <typename T>
 		CLReadBuffer(std::vector<T>& data)
-			: CLBuffer(CL_MEM_READ_ONLY, data.size() * sizeof(T), NULL, &data[0]) {	}
+			: CLBuffer(CL_MEM_READ_ONLY, data) { }
 
 		/**
 		* デバイス側で読み込みのみできるバッファ
@@ -26,7 +26,7 @@ namespace tcl
 		*/
 		template <typename T, size_t NUM>
 		CLReadBuffer(std::array<T, NUM>& data)
-			: CLBuffer(CL_MEM_READ_ONLY, NUM * sizeof(T), NULL, &data[0]) {	}
+			: CLBuffer(CL_MEM_READ_ONLY, data) { }
 
 		/**
 		* デバイス側で読み込みのみできるバッファ
@@ -34,7 +34,7 @@ namespace tcl
 		*/
 		template <typename T>
 		CLReadBuffer(T& data)
-			: CLBuffer(CL_MEM_READ_ONLY, sizeof(T), NULL, &data) { }
+			: CLBuffer(CL_MEM_READ_ONLY, data) { }
 
 		/**
 		* デバイス側で読み込みのみできるバッファ
@@ -43,7 +43,7 @@ namespace tcl
 		*/
 		template <typename T>
 		CLReadBuffer(T* data, const size_t& num)
-			: CLBuffer(CL_MEM_READ_ONLY, sizeof(T) * num, NULL, data) {	}
+			: CLBuffer(CL_MEM_READ_ONLY, data, num) { }
 
 		virtual ~CLReadBuffer() {}
 	};
