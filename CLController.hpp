@@ -39,7 +39,8 @@ namespace tcl
 		CLWorkGroupSettings* setting;
 		CLExecute* exec;
 
-		std::vector<CLBuffer*> argumentBuffer;
+		std::vector<CLBuffer*> argWrite;
+		std::vector<CLBuffer*> argRead;
 
 	private:
 		void InitSetting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
@@ -142,29 +143,32 @@ namespace tcl
 			return *this;
 		}
 
-		/**
-		* コードを実行する
-		* @param [in] current カーネルコードの引数
-		*/
 		template <typename T>
-		CLController& Run(T& current)
+		CLController& Run(CLReadBuffer<T>& buffer)
 		{
-			argumentBuffer.push_back(&current);
-			exec->SetArg(current);
-			exec->Run(*setting);
-			return *this;
+
+		}
+
+		template <typename T>
+		CLController& Run(CLWriteBuffer<T>& buffer)
+		{
+
+		}
+
+		template <typename T>
+		CLController& Run(CLReadWriteBuffer<T>& buffer)
+		{
+
 		}
 
 		/**
-		* コードを実行する
-		* @param [in] current カーネルコードの引数
-		* @param [in] others 可変長引数
+		* カーネルを実行する
 		*/
-		template <typename T, typename... Args>
-		CLController& Run(T& current, Args& ...others)
+		template <typename BUFFER, typename... Args>
+		CLController& Run(BUFFER& buffer, Args&... args)
 		{
-			exec->SetArg(current);
-			return Run(others...);
+			Run(args);
+			return *this;
 		}
 
 		/**
