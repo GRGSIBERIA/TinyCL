@@ -53,15 +53,6 @@
     <ClInclude Include="CLReadBuffer.hpp">
       <Filter>ヘッダー ファイル\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="CLHostCopyBuffer.hpp">
-      <Filter>ヘッダー ファイル\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="CLAllocHostBuffer.hpp">
-      <Filter>ヘッダー ファイル\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="CLUseHostBuffer.hpp">
-      <Filter>ヘッダー ファイル\Buffer</Filter>
-    </ClInclude>
     <ClInclude Include="TinyCL.hpp">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

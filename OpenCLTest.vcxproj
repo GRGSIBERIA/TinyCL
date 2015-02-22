@@ -144,18 +144,15 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CLAllocHostBuffer.hpp" />
     <ClInclude Include="CLBuffer.hpp" />
     <ClInclude Include="CLController.hpp" />
     <ClInclude Include="CLException.hpp" />
     <ClInclude Include="CLExecute.hpp" />
     <ClInclude Include="CLExecuteProperty.hpp" />
-    <ClInclude Include="CLHostCopyBuffer.hpp" />
     <ClInclude Include="CLInformation.hpp" />
     <ClInclude Include="CLReadBuffer.hpp" />
     <ClInclude Include="CLReadWriteBuffer.hpp" />
     <ClInclude Include="CLSource.hpp" />
-    <ClInclude Include="CLUseHostBuffer.hpp" />
     <ClInclude Include="CLWorkGroupSettings.hpp" />
     <ClInclude Include="CLWriteBuffer.hpp" />
     <ClInclude Include="TinyCL.hpp" />
