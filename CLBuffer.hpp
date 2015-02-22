@@ -20,13 +20,13 @@ namespace tcl
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
-	template <typename TYPE>
+	template <typename T>
 	class CLBuffer
 	{
 	private:
 		cl_mem memory;
 		size_t size;
-		TYPE* hostDataPtr;
+		T* hostDataPtr;
 
 	public:
 		/**
@@ -99,22 +99,20 @@ namespace tcl
 			}
 		}
 
-		template <typename T>
-		void SafeEnqueueRead(CLExecute& exec, size_t size, T* data)
+		void SafeEnqueueRead(CLExecute& exec)
 		{
 			auto result = clEnqueueReadBuffer(
 				exec.CommandQueue(), memory, CL_TRUE,
-				0, size, data,
+				0, size, hostDataPtr,
 				0, NULL, NULL);
 			ReadTest(result);
 		}
 
-		template <typename T>
-		void SafeEnqueueWrite(CLExecute& exec, size_t size, T* data)
+		void SafeEnqueueWrite(CLExecute& exec)
 		{
 			auto result = clEnqueueWriteBuffer(
 				exec.CommandQueue(), memory, CL_TRUE,
-				0, size, data,
+				0, size, hostDataPtr,
 				0, NULL, NULL);
 			ResultTest(result);
 		}
@@ -177,7 +175,7 @@ namespace tcl
 		*/
 		CLBuffer& Write(CLExecute& exec)
 		{
-			SafeEnqueueWrite(exec, size, hostDataPtr);
+			SafeEnqueueWrite(exec);
 			return *this;
 		}
 
@@ -186,10 +184,9 @@ namespace tcl
 		*/
 		CLBuffer& Read(CLExecute& exec)
 		{
-			SafeEnqueueRead(size, hostDataPtr);
+			SafeEnqueueRead(exec);
 			return *this;
 		}
-
 	};
 }
 
