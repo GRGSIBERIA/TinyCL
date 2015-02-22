@@ -39,8 +39,8 @@ namespace tcl
 		CLWorkGroupSettings* setting;
 		CLExecute* exec;
 
-		std::vector<CLBuffer*> argWrite;
-		std::vector<CLBuffer*> argRead;
+		std::vector<CLBuffer*> argWrite;	//!< デバイスが書き込む
+		std::vector<CLBuffer*> argRead;		//!< デバイスが読み込む
 
 	private:
 		void InitSetting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
@@ -151,25 +151,24 @@ namespace tcl
 			return *this;
 		}
 
-		template <typename T>
-		CLController& Run(CLReadBuffer<T>& buffer)
+		CLController& Run(CLReadBuffer& buffer)
 		{
 			argRead.push_back(&buffer);
 			return SetAndRun(buffer);
 		}
 
-		template <typename T>
-		CLController& Run(CLWriteBuffer<T>& buffer)
+		CLController& Run(CLWriteBuffer& buffer)
 		{
 			argWrite.push_back(&buffer);
+			buffer.Write(exec->CommandQueue());
 			return SetAndRun(buffer);
 		}
 
-		template <typename T>
-		CLController& Run(CLReadWriteBuffer<T>& buffer)
+		CLController& Run(CLReadWriteBuffer& buffer)
 		{
-			argRead.push_back(buffer);
-			argWrite.push_back(buffer);
+			argRead.push_back(&buffer);
+			argWrite.push_back(&buffer);
+			buffer.Write(exec->CommandQueue());
 			return SetAndRun(buffer);
 		}
 
@@ -179,16 +178,20 @@ namespace tcl
 		template <typename BUFFER, typename... Args>
 		CLController& Run(BUFFER& buffer, Args&... args)
 		{
-			Run(args);
+			Run(args...);
 			return *this;
 		}
 
 		/**
 		* カーネルコードの実行を待つ
+		* \attention Wait関数を呼び出さないと，結果が書き込まれません
 		*/
 		CLController& Wait()
 		{
 			exec->Wait();
+			
+			for (auto& buf : argWrite)
+				buf->Read(exec->CommandQueue());	// waitが呼び出された時点で結果を書き込む
 			argRead.clear();
 			argWrite.clear();
 			return *this;
