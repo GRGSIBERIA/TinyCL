@@ -106,24 +106,20 @@ namespace tcl
 		template <typename T>
 		void SafeEnqueueRead(size_t size, T* data)
 		{
-			execMutex.lock();
 			auto result = clEnqueueReadBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, size, data,
 				0, NULL, NULL);
-			execMutex.unlock();
 			ReadTest(result);
 		}
 
 		template <typename T>
 		void SafeEnqueueWrite(size_t size, T* data)
 		{
-			execMutex.lock();
 			auto result = clEnqueueWriteBuffer(
 				exec->CommandQueue(), memory, CL_TRUE,
 				0, size, data,
 				0, NULL, NULL);
-			execMutex.unlock();
 			ResultTest(result);
 		}
 
@@ -233,19 +229,7 @@ namespace tcl
 			SafeEnqueueRead(sizeof(T) * num, data);
 			return *this;
 		}
-
-		/**
-		* バッファが対象とするexecuteを指定
-		* Bufferクラスのインスタンスを生成する前に必要
-		*/
-		static void SetCurrentExecute(CLExecute* exec)
-		{
-			CLBuffer::exec = exec;
-		}
 	};
-
-	CLExecute* CLBuffer::exec = nullptr;
-	std::mutex CLBuffer::execMutex;
 }
 
 #endif
