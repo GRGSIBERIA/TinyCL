@@ -53,11 +53,29 @@ namespace tcl
 		}
 
 		template <typename T>
-		CLController& SetAndRun(T& buffer)
+		CLController& SetArgument(std::vector<CLBuffer*>& push, T& buffer)
 		{
+			argRead.push_back(&buffer);
 			exec->SetArg(buffer);
-			exec->Run(*setting);
 			return *this;
+		}
+
+		CLController& SetArg(CLReadBuffer& buffer)
+		{
+			return SetArgument(argRead, buffer);
+		}
+
+		CLController& SetArg(CLWriteBuffer& buffer)
+		{
+			buffer.Write(exec->CommandQueue());
+			return SetArgument(argWrite, buffer);
+		}
+
+		CLController& SetArg(CLReadWriteBuffer& buffer)
+		{
+			argWrite.push_back(&buffer);
+			buffer.Write(exec->CommandQueue());
+			return SetArgument(argRead, buffer);
 		}
 
 	public:
@@ -151,33 +169,24 @@ namespace tcl
 			return *this;
 		}
 
-		CLController& Run(CLReadBuffer& buffer)
+		/**
+		* 引数にバッファを指定してカーネルを実行する
+		*/
+		template <typename T>
+		CLController& Run(T& buffer)
 		{
-			argRead.push_back(&buffer);
-			return SetAndRun(buffer);
-		}
-
-		CLController& Run(CLWriteBuffer& buffer)
-		{
-			argWrite.push_back(&buffer);
-			buffer.Write(exec->CommandQueue());
-			return SetAndRun(buffer);
-		}
-
-		CLController& Run(CLReadWriteBuffer& buffer)
-		{
-			argRead.push_back(&buffer);
-			argWrite.push_back(&buffer);
-			buffer.Write(exec->CommandQueue());
-			return SetAndRun(buffer);
+			SetArg(buffer);
+			exec->Run(*setting);
+			return *this;
 		}
 
 		/**
-		* カーネルを実行する
+		* 引数にバッファを指定してカーネルを実行する
 		*/
 		template <typename BUFFER, typename... Args>
 		CLController& Run(BUFFER& buffer, Args&... args)
 		{
+			exec->SetArg(buffer);
 			Run(args...);
 			return *this;
 		}

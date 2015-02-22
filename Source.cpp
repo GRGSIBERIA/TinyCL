@@ -13,7 +13,7 @@ int main()
 	// デバイス側のメモリを確保
 	tcl::CLReadWriteBuffer bufA(inputA), bufB(inputB);
 
-	// N個のワーカーを用意し，引数を設定して実行
+	// N個のワーカーを用意し，引数を設定して実行，Wait関数で結果を書き込む
 	controller.Setting(N).Run(bufA, bufB).Wait();
 
 	// 中身が正しいかどうか確認する
@@ -22,8 +22,3 @@ int main()
 
 	return 0;
 }
-
-/**
-* 開発コメント
-* Bufferは使いまわしたいので，実行時にデータを送るような仕様にしたい
-*/
