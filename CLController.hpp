@@ -52,6 +52,14 @@ namespace tcl
 			setting->Optimize(*device);
 		}
 
+		template <typename T>
+		CLController& SetAndRun(T& buffer)
+		{
+			exec->SetArg(buffer);
+			exec->Run(*setting);
+			return *this;
+		}
+
 	public:
 		/**
 		* @brief TinyCL‚ğ§Œä‚·‚é‚½‚ß‚ÌƒRƒ“ƒgƒ[ƒ‰
@@ -146,19 +154,23 @@ namespace tcl
 		template <typename T>
 		CLController& Run(CLReadBuffer<T>& buffer)
 		{
-
+			argRead.push_back(&buffer);
+			return SetAndRun(buffer);
 		}
 
 		template <typename T>
 		CLController& Run(CLWriteBuffer<T>& buffer)
 		{
-
+			argWrite.push_back(&buffer);
+			return SetAndRun(buffer);
 		}
 
 		template <typename T>
 		CLController& Run(CLReadWriteBuffer<T>& buffer)
 		{
-
+			argRead.push_back(buffer);
+			argWrite.push_back(buffer);
+			return SetAndRun(buffer);
 		}
 
 		/**
@@ -177,6 +189,8 @@ namespace tcl
 		CLController& Wait()
 		{
 			exec->Wait();
+			argRead.clear();
+			argWrite.clear();
 			return *this;
 		}
 
