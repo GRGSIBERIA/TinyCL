@@ -20,13 +20,13 @@ namespace tcl
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
+	template <typename TYPE>
 	class CLBuffer
 	{
 	private:
-		static CLExecute* exec;			// 循環参照してしまったのでポインタにしてる
-		static std::mutex execMutex;	// マルチスレッド対策
 		cl_mem memory;
 		size_t size;
+		TYPE* hostDataPtr;
 
 	public:
 		/**
@@ -146,10 +146,12 @@ namespace tcl
 		* ホスト側からデバイス側に転送
 		*/
 		template <typename T>
-		CLBuffer& Write(const std::vector<T>& enqueueData)
+		CLBuffer& Write(std::vector<T>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
-			SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
+			//SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
+			hostDataPtr = &enqueueData[0];
+			size = sizeof(T) * enqueueData.size();
 			return *this;
 		}
 
@@ -157,10 +159,12 @@ namespace tcl
 		* ホスト側からデバイス側に転送
 		*/
 		template <typename T, size_t NUM>
-		CLBuffer& Write(const std::array<T, NUM>& enqueueData)
+		CLBuffer& Write(std::array<T, NUM>& enqueueData)
 		{
 			SizeTest<T>(enqueueData.size());
-			SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
+			//SafeEnqueueWrite(sizeof(T) * enqueueData.size(), &enqueueData[0]);
+			hostDataPtr = &enqueueData[0];
+			size = sizeof(T) * enqueueData.size();
 			return *this;
 		}
 
@@ -168,10 +172,12 @@ namespace tcl
 		* ホスト側からデバイス側に転送
 		* \attention 配列投げると落ちます
 		*/
-		template <typename T>
-		CLBuffer& Write(const T& data)
+		template <typename TYPE>
+		CLBuffer& Write(TYPE& data)
 		{
-			SafeEnqueueWrite(sizeof(T), &data);
+			//SafeEnqueueWrite(sizeof(TYPE), &data);
+			hostDataPtr = &data;
+			size = sizeof(TYPE);
 			return *this;
 		}
 
@@ -180,9 +186,11 @@ namespace tcl
 		* \attention 生ポインタ配列を扱う場合
 		*/
 		template <typename T>
-		CLBuffer& Write(T* data, const size_t num)
+		CLBuffer& Write(TYPE* data, const size_t num)
 		{
-			SafeEnqueueWrite(sizeof(T) * num, data);
+			//SafeEnqueueWrite(sizeof(TYPE) * num, data);
+			hostDataPtr = &data;
+			size = sizeof(T);
 			return *this;
 		}
 
@@ -212,10 +220,10 @@ namespace tcl
 		* デバイス側からホスト側に転送
 		* \attention 配列投げると落ちます
 		*/
-		template <typename T>
-		CLBuffer& Read(T& data)
+		template <typename TYPE>
+		CLBuffer& Read(TYPE& data)
 		{
-			SafeEnqueueRead(sizeof(T), &data);
+			SafeEnqueueRead(sizeof(TYPE), &data);
 			return *this;
 		}
 
@@ -223,10 +231,10 @@ namespace tcl
 		* デバイス側からホスト側に転送
 		* \attention 生ポインタ配列を扱う場合
 		*/
-		template <typename T>
-		CLBuffer& Read(T* data, const size_t num)
+		template <typename TYPE>
+		CLBuffer& Read(TYPE* data, const size_t num)
 		{
-			SafeEnqueueRead(sizeof(T) * num, data);
+			SafeEnqueueRead(sizeof(TYPE) * num, data);
 			return *this;
 		}
 	};
