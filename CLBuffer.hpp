@@ -20,13 +20,12 @@ namespace tcl
 	/**
 	* デバイス側メモリ領域のラッパークラス
 	*/
-	template <typename T>
 	class CLBuffer
 	{
 	private:
 		cl_mem memory;
 		size_t size;
-		T* hostDataPtr;
+		void* hostDataPtr;
 
 	public:
 		/**
@@ -119,7 +118,7 @@ namespace tcl
 
 		cl_mem CreateBuffer(const cl_mem_flags& flag)
 		{
-			return clCreateBuffer(information.context, flag, size, NULL, &information.result)
+			return clCreateBuffer(information.context, flag, size, NULL, &information.result);
 		}
 
 	protected:
