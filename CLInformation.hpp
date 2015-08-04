@@ -101,7 +101,7 @@ namespace tcl
 		{
 			for (const auto& device : deviceInfos)
 			{
-				if (device.DeviceType() == type)
+				if (device.GetDeviceType() == type)
 					return device;
 			}
 			throw CLException("該当するデバイスが存在しない");

@@ -23,15 +23,15 @@ namespace tcl
 		inline void OptimizeDimension(const CLDeviceInformation& device)
 		{
 			// 次元数を丸める
-			if (device.MaxWorkItemDimensions() < workDimension)
-				workDimension = device.MaxWorkItemDimensions();
+			if (device.GetMaxWorkItemDimensions() < workDimension)
+				workDimension = device.GetMaxWorkItemDimensions();
 		}
 
 		inline void OptimizeVectors(const CLDeviceInformation& device, std::vector<size_t>& target)
 		{
 			// ワーカーの最大値以下になるように最適化
-			const auto& itemSizes = device.MaxWorkItemSizes();
-			size_t dimension = device.MaxWorkItemDimensions();
+			const auto& itemSizes = device.GetMaxWorkItemSizes();
+			size_t dimension = device.GetMaxWorkItemDimensions();
 			if (target.size() < dimension)
 				dimension = target.size();
 
