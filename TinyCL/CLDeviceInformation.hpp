@@ -3,7 +3,6 @@
 
 #include <vector>
 #include "CLException.hpp"
-#include "CLPropertyMacro.hpp"
 
 namespace tcl
 {
