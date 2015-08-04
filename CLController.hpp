@@ -252,8 +252,19 @@ namespace tcl
 			
 		}
 
+		/*
+		* @brief コンテキストを取得する
+		* \return 現在設定中のコンテクスト
+		*/
 		cl_context& GetContext() { return information.context; }
 		__declspec(property(get = GetContext)) cl_context& Context;
+
+		/**
+		* @brief デバイス情報を取得する
+		* \return 現在利用可能なデバイス情報
+		*/
+		const CLDeviceInformation& GetDeviceInformation() const { return *device; }
+		__declspec(property(get = GetDeviceInformation)) const CLDeviceInformation& DeviceInformation;
 	};
 }
 
