@@ -4,12 +4,6 @@
 #include <vector>
 #include <algorithm>
 
-#ifdef __APPLE__
-#include <OpenCL/opencl.h>
-#else
-#include <CL\cl.h>
-#endif
-
 #include "CLException.hpp"
 #include "CLDeviceInformation.hpp"
 

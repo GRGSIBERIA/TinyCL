@@ -1,12 +1,6 @@
 #ifndef TCL_WORK_GROUP_SETTINGS_HPP
 #define TCL_WORK_GROUP_SETTINGS_HPP
 
-#ifdef __APPLE__
-#include <OpenCL/opencl.h>
-#else
-#include <CL\cl.h>
-#endif
-
 #include <vector>
 
 #include "CLDeviceInformation.hpp"

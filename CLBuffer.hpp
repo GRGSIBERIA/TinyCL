@@ -1,15 +1,10 @@
 #ifndef TCL_BUFFER_HPP
 #define TCL_BUFFER_HPP
 
-#ifdef __APPLE__
-#include <OpenCL/opencl.h>
-#else
-#include <CL\cl.h>
-#endif
-
 #include <vector>
 #include <array>
 #include <mutex>
+#include "CLInclude.hpp"
 #include "CLInformation.hpp"
 #include "CLExecute.hpp"
 

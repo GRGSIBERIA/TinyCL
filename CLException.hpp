@@ -3,6 +3,7 @@
 
 #include <string>
 #include <exception>
+#include "CLInclude.hpp"
 
 namespace tcl
 {

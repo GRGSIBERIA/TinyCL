@@ -1,12 +1,6 @@
 #ifndef TCL_DEVICE_HPP
 #define TCL_DEVICE_HPP
 
-#ifdef __APPLE__
-#include <OpenCL/opencl.h>
-#else
-#include <CL\cl.h>
-#endif
-
 #include <vector>
 
 #include "CLException.hpp"
