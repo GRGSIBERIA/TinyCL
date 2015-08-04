@@ -149,6 +149,7 @@
     <ClInclude Include="CLException.hpp" />
     <ClInclude Include="CLExecute.hpp" />
     <ClInclude Include="CLExecuteProperty.hpp" />
+    <ClInclude Include="CLInclude.hpp" />
     <ClInclude Include="CLInformation.hpp" />
     <ClInclude Include="CLReadBuffer.hpp" />
     <ClInclude Include="CLReadWriteBuffer.hpp" />

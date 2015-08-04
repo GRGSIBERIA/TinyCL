@@ -139,7 +139,7 @@ namespace tcl
 		* \param[in] device デバイス情報のインスタンス
 		*/
 		CLExecute(CLSource& source, const CLDeviceInformation& device)
-			: executeProperty(source, device.DeviceId()), argCount(0)
+			: executeProperty(source, device.DeviceId), argCount(0)
 		{
 
 		}
@@ -151,7 +151,7 @@ namespace tcl
 		* \param[in] device デバイス情報のインスタンス
 		*/
 		CLExecute(CLSourceArray& sourceArray, const CLDeviceInformation& device)
-			: executeProperty(sourceArray, device.DeviceId()), argCount(0)
+			: executeProperty(sourceArray, device.DeviceId), argCount(0)
 		{
 
 		}

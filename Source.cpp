@@ -20,5 +20,8 @@ int main()
 	for (int i = 0; i < N; ++i)
 		std::cout << i << "," << inputA[i] << "," << inputB[i] << std::endl;
 
+	int a;
+	std::cin >> a;
+
 	return 0;
 }
