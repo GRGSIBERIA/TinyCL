@@ -1,6 +1,6 @@
+#ifndef TINYCL_HPP
 #define TINYCL_HPP
-#ifdef TINYCL_HPP
 
-
+#include "CLController.hpp"
 
 #endif
