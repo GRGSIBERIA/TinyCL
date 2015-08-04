@@ -2,6 +2,7 @@
 #define TCL_CONTROLLER_HPP
 
 #include <string>
+#include <memory>
 
 #include "CLDeviceInformation.hpp"
 #include "CLInformation.hpp"
@@ -34,10 +35,11 @@ namespace tcl
 	*/
 	class CLController
 	{
-		CLSource* source;
+		std::shared_ptr<CLSource> source;
 		const CLDeviceInformation* device;
-		CLWorkGroupSettings* setting;
-		CLExecute* exec;
+		
+		std::shared_ptr<CLWorkGroupSettings> setting;
+		std::shared_ptr<CLExecute> exec;
 
 		std::vector<CLBuffer*> argWrite;	//!< デバイスが書き込む
 		std::vector<CLBuffer*> argRead;		//!< デバイスが読み込む
@@ -45,10 +47,7 @@ namespace tcl
 	private:
 		void InitSetting(const cl_uint dimension, const std::vector<size_t>& offset, const std::vector<size_t>& workerRange, const std::vector<size_t>& splitSize)
 		{
-			if (setting != nullptr)
-				delete setting;	// 何度も呼び出される対策
-
-			setting = new CLWorkGroupSettings(dimension, offset, workerRange, splitSize);
+			setting = std::shared_ptr<CLWorkGroupSettings>(new CLWorkGroupSettings(dimension, offset, workerRange, splitSize));
 			setting->Optimize(*device);
 		}
 
@@ -79,14 +78,7 @@ namespace tcl
 		}
 
 	public:
-		/**
-		* @brief TinyCLを制御するためのコントローラ
-		* \param [in] sourcePath ソースコードのパス
-		* \param [in] kernelFunction エントリーポイントになる関数名
-		* \param [in] deviceType デバイスの種類
-		* \param [in] sourceType ソースコードの種類
-		*/
-		CLController(const std::string& sourcePath, const std::string& kernelFunction, const DeviceType& deviceType = DeviceType::GPU, const SourceType& sourceType = SourceType::Text)
+		CLController& SetupDeviceType(const DeviceType& deviceType)
 		{
 			switch (deviceType)
 			{
@@ -102,8 +94,47 @@ namespace tcl
 			if (device == nullptr)
 				throw CLDeviceNotFoundException("対象のデバイスが見つかりませんでした");
 
-			source = new CLSource(sourcePath, kernelFunction, sourceType);
-			exec = new CLExecute(*source, *device);
+			return *this;
+		}
+
+		CLController& SetupSource(const std::string& sourcePath, const std::string& kernelFunction, const SourceType& sourceType = SourceType::Text)
+		{
+			source = std::shared_ptr<CLSource>(new CLSource(sourcePath, kernelFunction, sourceType));
+			exec = std::shared_ptr<CLExecute>(new CLExecute(*source, *device));
+			return *this;
+		}
+
+		/**
+		* @brief TinyCLを制御するためのコントローラ
+		* \param [in] sourcePath ソースコードのパス
+		* \param [in] kernelFunction エントリーポイントになる関数名
+		* \param [in] deviceType デバイスの種類
+		* \param [in] sourceType ソースコードの種類
+		*/
+		CLController(const std::string& sourcePath, const std::string& kernelFunction, const DeviceType& deviceType = DeviceType::GPU, const SourceType& sourceType = SourceType::Text)
+		{
+			SetupDeviceType(deviceType);
+
+			SetupSource(sourcePath, kernelFunction, sourceType);
+		}
+
+		/**
+		* @brief TinyCLを制御するためのコントローラ
+		* @warning 明示的にSetupDeviceType，SetupSourceの順で呼び出すこと
+		*/
+		CLController()
+		{
+
+		}
+
+		/**
+		* @brief TinyCLを制御するためのコントローラ
+		* \param [in] deviceType デバイスの種類
+		* @warning 明示的にSetupSourceを呼び出すこと
+		*/
+		CLController(const DeviceType& deviceType)
+		{
+			SetupDeviceType(deviceType);
 		}
 
 		/**
@@ -208,9 +239,7 @@ namespace tcl
 
 		virtual ~CLController()
 		{
-			delete exec;
-			delete setting;
-			delete source;
+			
 		}
 	};
 }
