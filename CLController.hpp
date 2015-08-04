@@ -78,6 +78,10 @@ namespace tcl
 		}
 
 	public:
+		/**
+		* @brief 明示的にデバイスの種類を設定する
+		* \param [in] deviceType デバイスの種類
+		*/
 		CLController& SetupDeviceType(const DeviceType& deviceType)
 		{
 			switch (deviceType)
@@ -97,6 +101,12 @@ namespace tcl
 			return *this;
 		}
 
+		/**
+		* @brief 明示的に実行するソースコードを指定する
+		* \param [in] sourcePath ソースコードのパス
+		* \param [in] kernelFunction エントリーポイントになる関数名
+		* \param [in] sourceType ソースコードの種類
+		*/
 		CLController& SetupSource(const std::string& sourcePath, const std::string& kernelFunction, const SourceType& sourceType = SourceType::Text)
 		{
 			source = std::shared_ptr<CLSource>(new CLSource(sourcePath, kernelFunction, sourceType));
@@ -241,6 +251,9 @@ namespace tcl
 		{
 			
 		}
+
+		cl_context& GetContext() { return information.context; }
+		__declspec(property(get = GetContext)) cl_context& Context;
 	};
 }
 
