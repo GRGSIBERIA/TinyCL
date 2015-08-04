@@ -38,14 +38,7 @@ namespace tcl
 		cl_ulong maxConstantBufferSize;
 		cl_ulong maxConstantArgs;
 
-	private:
-		template <typename T>
-		void GetDeviceInfo(T& var, const cl_device_info& type)
-		{
-			auto result = clGetDeviceInfo(deviceId, type, sizeof(T), &var, NULL);
-			if (result != CL_SUCCESS)
-				throw CLException("デバイスの情報が取得できない");
-		}
+	
 
 	public:
 		/**
@@ -168,6 +161,15 @@ namespace tcl
 
 		inline const cl_ulong& GetMaxConstantArgs() const {
 			return maxConstantArgs;
+		}
+
+	private:
+		template <typename T>
+		void GetDeviceInfo(T& var, const cl_device_info& type)
+		{
+			auto result = clGetDeviceInfo(deviceId, type, sizeof(T), &var, NULL);
+			if (result != CL_SUCCESS)
+				throw CLException("デバイスの情報が取得できない");
 		}
 
 	public:
