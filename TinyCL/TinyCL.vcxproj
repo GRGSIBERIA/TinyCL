@@ -70,6 +70,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CLAssertion.hpp" />
+    <ClInclude Include="CLController.hpp" />
+    <ClInclude Include="CLDeviceInformation.hpp" />
+    <ClInclude Include="CLException.hpp" />
+    <ClInclude Include="CLMachineInformation.hpp" />
+    <ClInclude Include="CLOpenCL.hpp" />
     <ClInclude Include="TinyCL.hpp" />
   </ItemGroup>
   <ItemGroup>
